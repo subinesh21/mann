@@ -1,0 +1,543 @@
+@import "tailwindcss";
+@import "bootstrap/dist/css/bootstrap.min.css";
+
+/* Theme tokens for Tailwind v4 - Amado Template Colors */
+@theme {
+  --color-background: hsl(0 0% 100%);
+  --color-foreground: hsl(0 0% 20%);
+  --color-card: hsl(0 0% 100%);
+  --color-card-foreground: hsl(0 0% 20%);
+  --color-popover: hsl(0 0% 100%);
+  --color-popover-foreground: hsl(0 0% 20%);
+  /* Amado Primary - Golden Yellow */
+  --color-primary: #00FF00;
+  --color-primary-foreground: hsl(0 0% 100%);
+  --color-secondary: hsl(0 0% 96%);
+  --color-secondary-foreground: hsl(0 0% 20%);
+  --color-muted: hsl(0 0% 96%);
+  --color-muted-foreground: hsl(0 0% 45%);
+  --color-accent: #00FF00;
+  --color-accent-foreground: hsl(0 0% 100%);
+  --color-destructive: hsl(4 90% 58%);
+  --color-destructive-foreground: hsl(0 0% 100%);
+  --color-border: hsl(0 0% 90%);
+  --color-input: hsl(0 0% 90%);
+  --color-ring: #00FF00;
+  --radius: 0;
+  
+  /* Font variables mapped to Next.js font variables */
+  --font-body: var(--font-open-sans);
+  --font-heading: var(--font-poppins);
+
+  /* Amado Template semantic colors */
+  --color-amado-yellow: #fbb710;
+  --color-amado-dark: #252525;
+  --color-amado-gray: #3c3c3c;
+  --color-amado-text: #131212;
+  --color-amado-muted: #6b6b6b;
+  --color-amado-light: #f5f7fa;
+  --color-amado-border: #ebebeb;
+  --color-eco-text: #131212;
+  --color-eco-muted: #6b6b6b;
+  --color-eco-bg: #f5f7fa;
+  --color-sale: #fbb710;
+  --color-eco-footer: #252525;
+  
+  /* Sidebar width */
+  --sidebar-width: 280px;
+}
+
+@layer base {
+  /* THE FIX FOR UNDERLINES: Overriding Bootstrap's Reboot */
+  a, .btn, button {
+    text-decoration: none !important;
+    box-shadow: none !important;
+  }
+
+  a:hover {
+    text-decoration: none !important;
+  }
+
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 20%;
+    /* ... rest of your variables ... */
+  }
+
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+    overflow-x: hidden; /* Prevent horizontal scroll */
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+}
+
+/* Utilities for layout */
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .bg-eco-footer{
+    background-color: #252525;
+  }
+}
+
+/* Amado Template Custom Styles */
+
+/* Main layout wrapper - FIX for full width */
+.main-content-wrapper {
+  min-height: 100vh;
+  
+  margin-left: 280px; /* Same as sidebar width */
+  float: right;
+}
+
+/* Sidebar Navigation - FIXED */
+.amado-sidebar {
+  width: 280px;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  background-color: #fff;
+  border-right: 1px solid #ebebeb;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  padding: 60px 40px 10px 40px;
+  overflow-y: auto;
+}
+
+.amado-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.amado-nav ul li {
+  margin-bottom: 20px;
+}
+
+.amado-nav ul li a {
+  font-size: 14px;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: #131212;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  display: inline-block;
+  position: relative;
+}
+
+.amado-nav ul li a::before {
+  content: '';
+  position: absolute;
+  left: -40px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 2px;
+  background-color: #fbb710;
+  transition: width 0.3s ease;
+}
+
+.amado-nav ul li.active a,
+.amado-nav ul li a:hover {
+  color: #fbb710;
+}
+
+.amado-nav ul li.active a::before,
+.amado-nav ul li a:hover::before {
+  width: 30px;
+}
+
+/* Amado Buttons */
+.amado-btn {
+  display: inline-block;
+  min-width: 160px;
+  height: 55px;
+  color: #fff;
+  background-color: #fbb710;
+  border: none;
+  border-radius: 0;
+  padding: 0 30px;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  line-height: 55px;
+  text-align: center;
+  transition: all 0.5s ease;
+  cursor: pointer;
+}
+
+.amado-btn:hover {
+  background-color: #131212;
+  color: #fff;
+}
+
+.amado-btn.active {
+  background-color: #131212;
+}
+
+.amado-btn.active:hover {
+  background-color: #fbb710;
+}
+
+/* Cart/Fav/Search Menu */
+.cart-fav-search a {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #6b6b6b;
+  margin-bottom: 15px;
+  transition: all 0.3s ease;
+}
+
+.cart-fav-search a:hover {
+  color: #fbb710;
+}
+
+.cart-fav-search a img {
+  margin-right: 10px;
+  max-width: 20px;
+}
+
+.cart-fav-search a span {
+  color: #6b6b6b;
+}
+
+/* Social Info */
+.social-info a {
+  color: #6b6b6b;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.social-info a:hover {
+  color: #fbb710;
+}
+
+/* Product Grid - Masonry Style */
+.products-catagories-area {
+  padding: 80px 40px;
+  width: 100%;
+}
+
+.single-products-catagory {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 30px;
+}
+
+.single-products-catagory img {
+  width: 100%;
+  height: auto;
+  transition: all 0.5s ease;
+}
+
+.single-products-catagory:hover img {
+  transform: scale(1.1);
+}
+
+.single-products-catagory .hover-content {
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  z-index: 10;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.5s ease;
+}
+
+.single-products-catagory:hover .hover-content {
+  opacity: 1;
+  visibility: visible;
+}
+
+.single-products-catagory .hover-content .line {
+  width: 80px;
+  height: 3px;
+  background-color: #fbb710;
+  margin-bottom: 15px;
+}
+
+.single-products-catagory .hover-content p {
+  font-size: 14px;
+  color: #6b6b6b;
+  margin-bottom: 5px;
+}
+
+.single-products-catagory .hover-content h4 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #131212;
+  margin: 0;
+}
+
+/* Footer Area - FIXED */
+.footer_area {
+  background-color: #252525;
+  padding: 10px 0;
+  width: 100vw;
+  margin-left: -280px;
+  position: relative;
+}
+
+.footer-logo img {
+  max-width: 120px;
+}
+
+.footer_menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 40px;
+}
+
+.footer_menu ul li a {
+  font-size: 14px;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+}
+
+.footer_menu ul li a:hover,
+.footer_menu ul li.active a {
+  color: #fbb710;
+}
+
+.copywrite {
+  color: #6b6b6b;
+  font-size: 12px;
+  margin-top: 20px;
+}
+
+.copywrite a {
+  color: #fbb710;
+}
+
+/* Shop Sidebar - FIXED */
+.shop_sidebar_area {
+  width: 100%;
+  background-color: #f5f7fa;
+  padding: 60px 40px;
+  position: relative;
+}
+
+.widget-title {
+  font-size: 14px;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: #131212;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+}
+
+.catagories-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.catagories-menu ul li {
+  margin-bottom: 15px;
+}
+
+.catagories-menu ul li a {
+  font-size: 14px;
+  color: #6b6b6b;
+  transition: all 0.3s ease;
+}
+
+.catagories-menu ul li.active a,
+.catagories-menu ul li a:hover {
+  color: #fbb710;
+}
+
+/* Product List - FIXED */
+.amado_product_area {
+  padding: 60px 40px;
+  width: 100%;
+}
+
+.single-product-wrapper {
+  position: relative;
+  margin-bottom: 50px;
+  overflow: hidden;
+}
+
+.product-img {
+  position: relative;
+  overflow: hidden;
+}
+
+.product-img img {
+  width: 100%;
+  height: auto;
+}
+
+.product-img .hover-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transition: all 0.5s ease;
+}
+
+.single-product-wrapper:hover .hover-img {
+  opacity: 1;
+}
+
+.product-description {
+  padding: 20px 0;
+}
+
+.product-meta-data .line {
+  width: 40px;
+  height: 2px;
+  background-color: #fbb710;
+  margin-bottom: 10px;
+}
+
+.product-meta-data .product-price {
+  font-size: 18px;
+  font-weight: 600;
+  color: #fbb710;
+  margin-bottom: 5px;
+}
+
+.product-meta-data h6 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #131212;
+  margin: 0;
+}
+
+.ratings i {
+  color: #fbb710;
+  font-size: 12px;
+}
+
+/* Mobile Navigation - FIXED */
+@media (max-width: 991px) {
+  .amado-sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    width: 80%;
+    max-width: 280px;
+    height: 100vh;
+    z-index: 1001;
+  }
+  
+  .amado-sidebar.open {
+    transform: translateX(0);
+  }
+  
+  .main-content-wrapper {
+    margin-left: 0;
+    
+    float: none;
+  }
+  
+  .mobile-nav {
+    display: flex !important;
+  }
+  
+  .products-catagories-area {
+    padding: 100px 20px 80px;
+  }
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media (max-width: 575.98px) {
+  .amado-sidebar {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .amado-nav ul li {
+    margin-bottom: 15px;
+  }
+  
+  .amado-btn {
+    min-width: 140px;
+    height: 50px;
+    padding: 0 20px;
+    font-size: 12px;
+  }
+  
+  .amado-nav ul li a {
+    font-size: 12px;
+  }
+  
+  .footer_menu ul {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .shop_sidebar_area {
+    width: 100%;
+    padding: 30px 20px;
+  }
+  
+  .amado_product_area {
+    padding: 40px 20px;
+    width: 100%;
+  }
+  
+  .single-products-catagory .hover-content {
+    top: 20px;
+    left: 20px;
+  }
+}
+
+/* Prevent scrolling when mobile menu is open */
+.no-scroll {
+  overflow: hidden;
+}
+
+/* Pagination */
+.pagination .page-link {
+  border: none;
+  color: #6b6b6b;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 15px;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: transparent;
+  color: #fbb710;
+}
+
+.pagination .page-link:hover {
+  color: #fbb710;
+  background-color: transparent;
+}
+
+/* Bootstrap row fixes */
+.row {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.container-fluid {
+  padding-left: 0;
+  padding-right: 0;
+  width: 100%;
+}
