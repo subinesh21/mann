@@ -5,15 +5,5 @@
       "src": "package.json",
       "use": "@vercel/next"
     }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/"
-    }
-  ],
-  "env": {
-    "MONGODB_URI": "@mongodb_uri",
-    "SESSION_SECRET": "@session_secret"
-  }
+  ]
 }

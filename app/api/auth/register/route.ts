@@ -32,8 +32,11 @@ export async function POST(request: NextRequest) {
       );
     }
     
+    // FIX: Use type assertion for User model
+    const UserModel = User as any;
+    
     // Check if user already exists
-    const existingUser = await User.findOne({ email });
+    const existingUser = await UserModel.findOne({ email });
     if (existingUser) {
       if (existingUser.googleId) {
         return NextResponse.json(
@@ -51,7 +54,7 @@ export async function POST(request: NextRequest) {
     const userId = new mongoose.Types.ObjectId().toString();
     
     // Create new user
-    const user = new User({
+    const user = new UserModel({
       _id: userId,
       uid: userId,
       name,

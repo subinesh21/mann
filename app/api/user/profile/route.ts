@@ -19,8 +19,11 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    // FIX: Use type assertion for UserModel
+    const User = UserModel as any;
+    
     // Find user by uid (Firebase UID) since that's what we're using
-    const user = await UserModel.findOne({ uid: userId }).lean();
+    const user = await User.findOne({ uid: userId }).lean();
 
     console.log('User found:', user ? 'Yes' : 'No');
 
@@ -91,12 +94,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // FIX: Use type assertion for UserModel
+    const User = UserModel as any;
+    
     // Check if user already exists by uid
-    let user = await UserModel.findOne({ uid: userId });
+    let user = await User.findOne({ uid: userId });
 
     if (!user) {
       // Check if user exists by email
-      user = await UserModel.findOne({ email });
+      user = await User.findOne({ email });
       
       if (user) {
         // Update existing user with Firebase UID
@@ -105,7 +111,7 @@ export async function POST(request: NextRequest) {
         await user.save();
       } else {
         // Create new user with string ID
-        user = await UserModel.create({
+        user = await User.create({
           _id: userId, // Use Firebase UID as _id
           uid: userId,
           name,
@@ -192,8 +198,11 @@ export async function PATCH(request: NextRequest) {
       shippingAddress.phone = cleanPhone;
     }
 
+    // FIX: Use type assertion for UserModel
+    const User = UserModel as any;
+    
     // Find user by uid (Firebase UID)
-    let user = await UserModel.findOne({ uid: userId });
+    let user = await User.findOne({ uid: userId });
 
     // If user doesn't exist, create one
     if (!user) {
@@ -201,7 +210,7 @@ export async function PATCH(request: NextRequest) {
       
       // Try to find by email if provided in body
       if (body.email) {
-        user = await UserModel.findOne({ email: body.email });
+        user = await User.findOne({ email: body.email });
       }
       
       if (user) {
@@ -211,7 +220,7 @@ export async function PATCH(request: NextRequest) {
         user.updatedAt = new Date();
       } else {
         // Create completely new user
-        user = await UserModel.create({
+        user = await User.create({
           _id: userId,
           uid: userId,
           name: name || 'User',

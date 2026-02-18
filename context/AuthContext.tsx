@@ -4,9 +4,20 @@ import { createContext, useContext, useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 
-const AuthContext = createContext();
+// Define the shape of our auth context
+interface AuthContextType {
+  user: any;
+  loading: boolean;
+  isAuthenticated: boolean;
+  login: (email: string, password: string, loginAs?: string) => Promise<any>;
+  register: (name: string, email: string, password: string) => Promise<any>;
+  logout: () => Promise<void>;
+}
 
-export function AuthProvider({ children }) {
+// Create context with a default value
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -42,7 +53,7 @@ export function AuthProvider({ children }) {
     checkSession();
   }, []);
 
-  const login = async (email, password, loginAs = 'user') => {
+  const login = async (email: string, password: string, loginAs: string = 'user') => {
     try {
       setLoading(true);
       
@@ -83,14 +94,14 @@ export function AuthProvider({ children }) {
       }
     } catch (error) {
       console.error('Login error:', error);
-      toast.error(error.message || 'Login failed');
+      toast.error(error instanceof Error ? error.message : 'Login failed');
       throw error;
     } finally {
       setLoading(false);
     }
   };
 
-  const register = async (name, email, password) => {
+  const register = async (name: string, email: string, password: string) => {
     try {
       setLoading(true);
       
@@ -112,7 +123,7 @@ export function AuthProvider({ children }) {
       }
     } catch (error) {
       console.error('Registration error:', error);
-      toast.error(error.message || 'Registration failed');
+      toast.error(error instanceof Error ? error.message : 'Registration failed');
       throw error;
     } finally {
       setLoading(false);
@@ -163,7 +174,7 @@ export function AuthProvider({ children }) {
 
 export function useAuth() {
   const context = useContext(AuthContext);
-  if (!context) {
+  if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;

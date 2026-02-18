@@ -25,16 +25,16 @@ export async function GET(request: NextRequest) {
     // Calculate pagination
     const skip = (page - 1) * limit;
 
-    // Fetch users with pagination
-    const users = await UserModel.find(query)
-      .select('-password') // Exclude password field
+    // Fetch users with pagination - FIXED with type assertion
+    const users = await (UserModel as any).find(query)      
+      .select('-password')
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
       .lean();
 
     // Get total count for pagination
-    const total = await UserModel.countDocuments(query);
+    const total = await (UserModel as any).countDocuments(query);
 
     // Format users for response
     const formattedUsers = users.map((user: any) => ({
@@ -82,7 +82,8 @@ export async function PATCH(request: NextRequest) {
       );
     }
 
-    const user = await UserModel.findByIdAndUpdate(
+    // FIXED: Added type assertion for findByIdAndUpdate
+    const user = await (UserModel as any).findByIdAndUpdate(
       userId,
       { isActive, updatedAt: new Date() },
       { new: true }

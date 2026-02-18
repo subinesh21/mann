@@ -18,8 +18,11 @@ export async function GET(request: NextRequest) {
       );
     }
     
+    // FIX: Use type assertion for User model
+    const UserModel = User as any;
+    
     // Find user
-    const user = await User.findById(session.userId);
+    const user = await UserModel.findById(session.userId);
     
     if (!user || !user.isActive) {
       // Clear invalid session

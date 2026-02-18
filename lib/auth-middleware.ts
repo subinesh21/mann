@@ -13,7 +13,10 @@ export async function getUserFromSession(request: NextRequest) {
       return null;
     }
     
-    const user = await User.findById(session.userId);
+    // FIX: Use type assertion for User model
+    const UserModel = User as any;
+    
+    const user = await UserModel.findById(session.userId);
     
     if (!user || !user.isActive) {
       // Clear invalid session

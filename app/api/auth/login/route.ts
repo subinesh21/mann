@@ -27,8 +27,11 @@ export async function POST(request: NextRequest) {
       );
     }
     
+    // FIX: Use type assertion for User model
+    const UserModel = User as any;
+    
     // Find user and include password field
-    const user = await User.findOne({ email }).select('+password');
+    const user = await UserModel.findOne({ email }).select('+password');
     
     if (!user || !user.isActive) {
       return NextResponse.json(

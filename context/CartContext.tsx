@@ -3,10 +3,36 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 
-const CartContext = createContext();
+// Define types for cart items and context
+interface CartItem {
+  _id?: string;
+  productId?: string;
+  id?: string | number;
+  name: string;
+  price: number;
+  image: string;
+  quantity: number;
+  color?: string | null;
+}
 
-export function CartProvider({ children }) {
-  const [cartItems, setCartItems] = useState([]);
+interface CartContextType {
+  cartItems: CartItem[];
+  cartCount: number;
+  cartTotal: number;
+  isCartOpen: boolean;
+  setIsCartOpen: (isOpen: boolean) => void;
+  addToCart: (product: any, quantity?: number, color?: string | null) => void;
+  removeFromCart: (productId: string, color?: string | null) => void;
+  updateQuantity: (productId: string, newQuantity: number, color?: string | null) => void;
+  clearCart: () => void;
+  placeOrder: (orderData: any, userData: any) => Promise<boolean>;
+}
+
+// Create context with undefined default value
+const CartContext = createContext<CartContextType | undefined>(undefined);
+
+export function CartProvider({ children }: { children: React.ReactNode }) {
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [cartCount, setCartCount] = useState(0);
   const [cartTotal, setCartTotal] = useState(0);
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -40,7 +66,7 @@ export function CartProvider({ children }) {
     }
   }, [cartItems]);
 
-  const addToCart = (product, quantity = 1, color = null) => {
+  const addToCart = (product: any, quantity = 1, color: string | null = null) => {
     if (!product || !(product._id || product.productId || product.id)) {
       toast.error('Invalid product');
       return;
@@ -61,7 +87,7 @@ export function CartProvider({ children }) {
         return updatedItems;
       } else {
         // Add new item
-        const newItem = {
+        const newItem: CartItem = {
           _id: productId,
           productId: productId,
           id: product.id || productId,
@@ -80,7 +106,7 @@ export function CartProvider({ children }) {
     setIsCartOpen(true);
   };
 
-  const removeFromCart = (productId, color = null) => {
+  const removeFromCart = (productId: string, color: string | null = null) => {
     setCartItems(prevItems => {
       const filtered = prevItems.filter(item => {
         const itemId = item._id || item.productId || item.id;
@@ -98,7 +124,7 @@ export function CartProvider({ children }) {
     });
   };
 
-  const updateQuantity = (productId, newQuantity, color = null) => {
+  const updateQuantity = (productId: string, newQuantity: number, color: string | null = null) => {
     if (newQuantity < 1) {
       removeFromCart(productId, color);
       return;
@@ -127,7 +153,7 @@ export function CartProvider({ children }) {
     toast.info('Cart cleared');
   };
 
-  const placeOrder = async (orderData, userData) => {
+  const placeOrder = async (orderData: any, userData: any) => {
     try {
       // Validate order data
       if (!orderData.items || orderData.items.length === 0) {
@@ -162,7 +188,7 @@ export function CartProvider({ children }) {
           name: userData.name,
           email: userData.email,
         },
-        items: orderData.items.map(item => ({
+        items: orderData.items.map((item: any) => ({
           _id: item._id || item.id,
           productId: item._id || item.id,
           name: item.name,
@@ -238,7 +264,7 @@ export function CartProvider({ children }) {
 
 export function useCart() {
   const context = useContext(CartContext);
-  if (!context) {
+  if (context === undefined) {
     throw new Error('useCart must be used within a CartProvider');
   }
   return context;
