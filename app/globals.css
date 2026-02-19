@@ -30,13 +30,13 @@
   --font-heading: var(--font-poppins);
 
   /* Amado Template semantic colors - Changed to Green */
-  --color-amado-green: #52dd28ff;
+  --color-amado-yellow: #52dd28ff;
   --color-amado-dark: #52dd28ff;
   --color-amado-gray: #52dd28ff;
   --color-amado-text: #52dd28ff;
-  --color-amado-muted: #52dd28ff;
+  --color-amado-muted: #6b6b6b;
   --color-amado-light: #52dd28ff;
-  --color-amado-border: #52dd28ff;
+  --color-amado-border: #ebebeb;
   --color-eco-text: #52dd28ff;
   --color-eco-muted: #52dd28ff;
   --color-eco-bg: #52dd28ff;

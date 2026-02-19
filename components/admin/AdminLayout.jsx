@@ -89,7 +89,7 @@ export default function AdminLayout({ children }) {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+                className="fixed inset-0 bg-green/50 z-40 lg:hidden"
                 onClick={() => setSidebarOpen(false)}
               />
             )}
@@ -110,7 +110,7 @@ export default function AdminLayout({ children }) {
                   </div>
                   <div>
                     <h5 className="text-xl font-bold text-amado-dark">Admin Panel</h5>
-                    <p className="text-xs text-amado-muted">CGG EHA</p>
+                    <p className="text-xs text-amado-muted">MAnn</p>
                   </div>
                 </div>
                 <button

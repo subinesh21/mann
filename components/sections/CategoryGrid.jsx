@@ -267,19 +267,19 @@ export default function CategoryGrid() {
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300" />
               </div>
 
-              {/* Text overlay with manual positioning and styling */}
-              <div className={`absolute ${getTextPosition(item.textPosition)} ${item.padding}`}>
-                  <div className="w-10 h-[3px] bg-[#fbb710] mb-3" />
-                  <p className={`text-sm text-${item.textColor}/80 font-medium`}>
-                    From ${item.price}
-                  </p>
-                  <h3 className={`text-lg font-semibold text-${item.textColor}`}>
-                    {item.customName || item.name}
-                  </h3>
-                  <p className={`text-sm text-${item.textColor}/60 mt-1`}>
-                    {item.count} Products
-                  </p>
-                </div>
+            {/* Text overlay with manual positioning and styling */}
+            <div className={`absolute ${getTextPosition(item.textPosition)} ${item.padding}`}>
+              <div className="w-10 h-[3px] bg-[#fbb710] mb-3" />
+              <p className="text-sm text-white font-medium">
+                From ${item.price}
+              </p>
+              <h3 className="text-lg font-semibold text-white">
+                {item.customName || item.name}
+              </h3>
+              <p className="text-sm text-white/80 mt-1">
+                {item.count} Products
+              </p>
+            </div>
             </Link>
           </motion.div>
         ))}
