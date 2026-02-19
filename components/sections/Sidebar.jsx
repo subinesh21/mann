@@ -68,7 +68,7 @@ export default function Sidebar() {
         </div>
 
         {/* Logo - Increased bottom margin */}
-        <div className="logo mb-45">
+        <div className="logo mb-40">
           <a href="/" className="text-3xl font-bold text-[#131212]">
             <span className="text-[#52dd28ff]">MAnn</span>
           </a>
