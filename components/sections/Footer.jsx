@@ -22,7 +22,7 @@ export default function Footer() {
           <div className="lg:w-1/3 text-center lg:text-left">
             <div className="footer-logo mb-6">
               <a href="/" className="text-3xl font-bold text-white">
-                <span className="text-[#fbb710]">C</span>GG
+                <span className="text-[#52dd28ff]">MAnn</span>
               </a>
             </div>
             <p className="copywrite">

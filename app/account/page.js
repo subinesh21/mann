@@ -14,9 +14,6 @@ import Link from 'next/link';
 import { auth } from '@/lib/firebase';
 import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import Sidebar from '@/components/sections/Sidebar';
-import Footer from '@/components/sections/Footer';
-import Newsletter from '@/components/sections/Newsletter';
-import ScrollToTop from '@/components/ScrollToTop';
 import { toast } from 'react-toastify';
 
 // Status config for orders
@@ -771,15 +768,12 @@ function AccountDashboard() {
                         </AnimatePresence>
                       </motion.div>
                     );
-                  })}
+                })}
                 </div>
               )}
             </div>
           </motion.div>
 
-          <Newsletter />
-          <Footer />
-          <ScrollToTop visible={showScrollTop} />
         </div>
       </div>
     </div>
@@ -1113,9 +1107,6 @@ function AuthForm() {
           </div>
         </div>
 
-        <Newsletter />
-        <Footer />
-        <ScrollToTop visible={showScrollTop} />
       </div>
     </div>
   );

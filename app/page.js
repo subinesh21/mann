@@ -35,15 +35,12 @@ export default function HomePage() {
     <div className="min-h-screen bg-white">
       <Sidebar />
       
-      {/* Main Content */}
       <div className="main-content-wrapper">
-        {/* Mobile Header Spacer */}
-        <div className="h-14 lg:hidden"></div>
+        <div className="h-14 lg:hidden">
+        </div>
         
-        {/* Category Grid */}
         <CategoryGrid />
         
-        {/* Footer */}
         <Footer />
       </div>
     </div>

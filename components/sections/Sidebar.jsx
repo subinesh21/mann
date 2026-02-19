@@ -4,10 +4,11 @@ import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
+import { Mail, Facebook, Twitter, Instagram } from 'lucide-react';
 
 const navItems = [
   { name: 'Home', href: '/' },
-  { name: 'All Products', href: '/products/allproducts' },
+  { name: 'Products', href: 'products' },
   { name: 'Shop', href: '/shop' },
   { name: 'Cart', href: '/cart' },
 ];
@@ -67,16 +68,16 @@ export default function Sidebar() {
           <i className="fa fa-close text-2xl text-[#6b6b6b] hover:text-[#fbb710] transition-colors"></i>
         </div>
 
-        {/* Logo */}
-        <div className="logo mb-10">
+        {/* Logo - Increased bottom margin */}
+        <div className="logo mb-45">
           <a href="/" className="text-3xl font-bold text-[#131212]">
-            <span className="text-[#fbb710]">C</span>GG
+            <span className="text-[#52dd28ff]">MAnn</span>
           </a>
           <p className="text-xs text-[#6b6b6b] mt-1 tracking-[3px]">SUSTAINABLE</p>
         </div>
 
-        {/* Navigation */}
-        <nav className="amado-nav mb-2">
+        {/* Navigation - Increased bottom margin */}
+        <nav className="amado-nav mb-30 ml-7">
           <ul>
             {navItems.map((item) => (
               <li key={item.name} className={pathname === item.href ? 'active' : ''}>
@@ -88,20 +89,20 @@ export default function Sidebar() {
           </ul>
         </nav>
 
-        {/* Search button */}
-        <div className="cart-fav-search mb-4 ml-2">
+        {/* Search button - Increased left margin */}
+        <div className="cart-fav-search mb-6 ml-4">
           <button 
             onClick={() => setIsSearchOpen(!isSearchOpen)}
-            className="search-nav block w-full text-left mt-4"
+            className="search-nav block w-full text-left"
           >
-            <i className="fa fa-search mr-3 text-[#6b6b6b]"></i>
+            <i className="fa fa-search mr-4 text-[#6b6b6b]"></i>
             Search
           </button>
         </div>
 
-        {/* Search Form */}
+        {/* Search Form - Increased left margin and bottom margin */}
         {isSearchOpen && (
-          <div className="mb-8 ml-2">
+          <div className="mb-12 ml-4">
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -118,43 +119,43 @@ export default function Sidebar() {
           </div>
         )}
 
-        {/* Account */}
-        <div className="mb-10 pt-4 pb-4 ml-2 border-t border-[#ebebeb]">
+        {/* Account - Increased left margin, vertical padding, and bottom margin */}
+        <div className=" pt-6 pb-6 ml-4 border-t border-[#ebebeb]">
           {isAuthenticated ? (
-            <div className="space-y-3">
-              <a href="/account" className="flex items-center text-sm text-[#6b6b6b] hover:text-[#fbb710] transition-colors">
-                <i className="fa fa-user mr-3"></i>
+            <div className="space-y-4">
+              <a href="/account" className="flex items-center text-sm text-[#52dd28ff ] hover:text-[#52dd28ff] transition-colors">
+                <i className="fa fa-user mr-4"></i>
                 Hi, {user?.name?.split(' ')[0]}
               </a>
               <button 
                 onClick={logout}
-                className="flex items-center text-sm text-[#6b6b6b] hover:text-[#fbb710] transition-colors"
+                className="flex items-center text-sm text-[#b31313ff] hover:text-[#b31313ff] transition-colors"
               >
-                <i className="fa fa-sign-out mr-3"></i>
+                <i className="fa fa-sign-out mr-4"></i>
                 Logout
               </button>
             </div>
           ) : (
             <a href="/account" className="flex items-center text-sm text-[#6b6b6b] hover:text-[#fbb710] transition-colors">
-              <i className="fa fa-user mr-3"></i>
+              <i className="fa fa-user mr-4"></i>
               Account
             </a>
           )}
         </div>
 
-        {/* Social Button */}
-        <div className="social-info flex justify-between">
+        {/* Social Button - Increased horizontal gap between icons */}
+        <div className="social-info flex justify-between mt-2 ">
           <a href="#" className="hover:text-[#fbb710] transition-colors">
-            <i className="fa fa-mail"></i>
+            <Mail className="w-6 h-6" />
           </a>
           <a href="#" className="hover:text-[#fbb710] transition-colors">
-            <i className="fa fa-facebook"></i>
+            <Facebook className="w-6 h-6" />
           </a>
           <a href="#" className="hover:text-[#fbb710] transition-colors">
-            <i className="fa fa-twitter"></i>
+            <Twitter className="w-6 h-6" />
           </a>
           <a href="#" className="hover:text-[#fbb710] transition-colors">
-            <i className="fa fa-file"></i>
+            <Instagram className="w-6 h-6" />
           </a>
         </div>
       </header>

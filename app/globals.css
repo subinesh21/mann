@@ -9,39 +9,39 @@
   --color-card-foreground: hsl(0 0% 20%);
   --color-popover: hsl(0 0% 100%);
   --color-popover-foreground: hsl(0 0% 20%);
-  /* Amado Primary - Golden Yellow */
-  --color-primary: #00FF00;
+  /* Amado Primary - Changed to Green */
+  --color-primary: #52dd28ff;
   --color-primary-foreground: hsl(0 0% 100%);
   --color-secondary: hsl(0 0% 96%);
   --color-secondary-foreground: hsl(0 0% 20%);
   --color-muted: hsl(0 0% 96%);
   --color-muted-foreground: hsl(0 0% 45%);
-  --color-accent: #00FF00;
+  --color-accent: #52dd28ff;
   --color-accent-foreground: hsl(0 0% 100%);
   --color-destructive: hsl(4 90% 58%);
   --color-destructive-foreground: hsl(0 0% 100%);
   --color-border: hsl(0 0% 90%);
   --color-input: hsl(0 0% 90%);
-  --color-ring: #00FF00;
+  --color-ring: #52dd28ff;
   --radius: 0;
   
   /* Font variables mapped to Next.js font variables */
   --font-body: var(--font-open-sans);
   --font-heading: var(--font-poppins);
 
-  /* Amado Template semantic colors */
-  --color-amado-yellow: #fbb710;
-  --color-amado-dark: #252525;
-  --color-amado-gray: #3c3c3c;
-  --color-amado-text: #131212;
-  --color-amado-muted: #6b6b6b;
-  --color-amado-light: #f5f7fa;
-  --color-amado-border: #ebebeb;
-  --color-eco-text: #131212;
-  --color-eco-muted: #6b6b6b;
-  --color-eco-bg: #f5f7fa;
-  --color-sale: #fbb710;
-  --color-eco-footer: #252525;
+  /* Amado Template semantic colors - Changed to Green */
+  --color-amado-green: #52dd28ff;
+  --color-amado-dark: #52dd28ff;
+  --color-amado-gray: #52dd28ff;
+  --color-amado-text: #52dd28ff;
+  --color-amado-muted: #52dd28ff;
+  --color-amado-light: #52dd28ff;
+  --color-amado-border: #52dd28ff;
+  --color-eco-text: #52dd28ff;
+  --color-eco-muted: #52dd28ff;
+  --color-eco-bg: #52dd28ff;
+  --color-sale: #52dd28ff;
+  --color-eco-footer: #52dd28ff;
   
   /* Sidebar width */
   --sidebar-width: 280px;
@@ -124,7 +124,7 @@
 }
 
 .amado-nav ul li {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
 .amado-nav ul li a {
@@ -146,13 +146,13 @@
   transform: translateY(-50%);
   width: 0;
   height: 2px;
-  background-color: #fbb710;
+  background-color: #52dd28ff;
   transition: width 0.3s ease;
 }
 
 .amado-nav ul li.active a,
 .amado-nav ul li a:hover {
-  color: #fbb710;
+  color: #52dd28ff;
 }
 
 .amado-nav ul li.active a::before,
@@ -166,7 +166,7 @@
   min-width: 160px;
   height: 55px;
   color: #fff;
-  background-color: #fbb710;
+  background-color: #52dd28ff;
   border: none;
   border-radius: 0;
   padding: 0 30px;
@@ -190,7 +190,7 @@
 }
 
 .amado-btn.active:hover {
-  background-color: #fbb710;
+  background-color: #52dd28ff;
 }
 
 /* Cart/Fav/Search Menu */
@@ -204,7 +204,7 @@
 }
 
 .cart-fav-search a:hover {
-  color: #fbb710;
+  color: #52dd28ff;
 }
 
 .cart-fav-search a img {
@@ -224,7 +224,7 @@
 }
 
 .social-info a:hover {
-  color: #fbb710;
+  color: #52dd28ff;
 }
 
 /* Product Grid - Masonry Style */
@@ -267,7 +267,7 @@
 .single-products-catagory .hover-content .line {
   width: 80px;
   height: 3px;
-  background-color: #fbb710;
+  background-color: #52dd28ff;
   margin-bottom: 15px;
 }
 
@@ -317,7 +317,7 @@
 
 .footer_menu ul li a:hover,
 .footer_menu ul li.active a {
-  color: #fbb710;
+  color: #52dd28ff;
 }
 
 .copywrite {
@@ -327,7 +327,7 @@
 }
 
 .copywrite a {
-  color: #fbb710;
+  color: #52dd28ff;
 }
 
 /* Shop Sidebar - FIXED */
@@ -365,7 +365,7 @@
 
 .catagories-menu ul li.active a,
 .catagories-menu ul li a:hover {
-  color: #fbb710;
+  color: #52dd28ff;
 }
 
 /* Product List - FIXED */
@@ -409,14 +409,14 @@
 .product-meta-data .line {
   width: 40px;
   height: 2px;
-  background-color: #fbb710;
+  background-color: #52dd28ff;
   margin-bottom: 10px;
 }
 
 .product-meta-data .product-price {
   font-size: 18px;
   font-weight: 600;
-  color: #fbb710;
+  color: #52dd28ff;
   margin-bottom: 5px;
 }
 
@@ -428,7 +428,7 @@
 }
 
 .ratings i {
-  color: #fbb710;
+  color: #52dd28ff;
   font-size: 12px;
 }
 
@@ -522,11 +522,11 @@
 
 .pagination .page-item.active .page-link {
   background-color: transparent;
-  color: #fbb710;
+  color: #52dd28ff;
 }
 
 .pagination .page-link:hover {
-  color: #fbb710;
+  color: #52dd28ff;
   background-color: transparent;
 }
 

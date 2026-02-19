@@ -12,7 +12,7 @@ import axios from '@/lib/axios';
 
 import { PRODUCTS, CATEGORY_INFO } from '@/lib/product-data';
 
-export default function AllProductsPage() {
+export default function ProductsPage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -119,16 +119,6 @@ export default function AllProductsPage() {
         <div className="h-14 lg:hidden"></div>
         
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          {/* Header */}
-          <div className="text-center mb-12">
-            <h1 className="text-3xl lg:text-4xl font-bold text-[#131212] mb-4">
-              All Products
-            </h1>
-            <p className="text-[#6b6b6b] max-w-2xl mx-auto">
-              Browse our complete collection of sustainable products organized by category
-            </p>
-          </div>
-
           {/* Products by Category */}
           <div className="space-y-16">
             {categoryOrder.map(categoryId => {
@@ -153,7 +143,7 @@ export default function AllProductsPage() {
                   </div>
                   
                   {/* Products Grid */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {categoryProducts.map((product, index) => (
                       <motion.div
                         key={product._id || product.id}
@@ -162,8 +152,8 @@ export default function AllProductsPage() {
                         transition={{ duration: 0.3, delay: index * 0.05 }}
                         className="group"
                       >
-                        <Link href={`/products/detail/${product._id || product.id}`}>
-                          <div className="relative aspect-square bg-[#f5f7fa] overflow-hidden mb-4 rounded-lg">
+                        <Link href={`/detail/${product._id || product.id}`}>
+                          <div className="relative aspect-square bg-[#f5f7fa] overflow-hidden mb-4">
                             <img
                               src={product.image || categoryData?.image || '/images/product-chai-cups.jpg'}
                               alt={product.name}
@@ -211,10 +201,10 @@ export default function AllProductsPage() {
                           </div>
                         </Link>
 
-                        <Link href={`/products/detail/${product._id || product.id}`}>
-                          <h3 className="text-sm text-[#131212] font-medium line-clamp-2 mb-2 group-hover:text-[#fbb710] transition-colors">
+                        <Link href={`/detail/${product._id || product.id}`}>
+                          <h5 className="text-sm text-black font-medium line-clamp-2 mb-2 group-hover:text-[#fbb710] transition-colors">
                             {product.name}
-                          </h3>
+                          </h5>
                         </Link>
 
                         <div className="flex items-center gap-2">

@@ -9,7 +9,6 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Sidebar from '@/components/sections/Sidebar';
 import Footer from '@/components/sections/Footer';
-import Newsletter from '@/components/sections/Newsletter';
 import ScrollToTop from '@/components/ScrollToTop';
 import { toast } from 'react-toastify';
 
@@ -294,7 +293,7 @@ export default function CheckoutPage() {
               <div className="bg-white rounded-xl border border-[#ebebeb] p-6">
                 <h2 className="text-xl font-semibold text-[#131212] mb-6">Order Summary</h2>
                 
-                <div className="space-y-4 max-h-96 overflow-y-auto pr-2">
+                <div className="space-y-4 max-h-105 overflow-y-auto pr-2">
                   {cartItems.map((item, index) => (
                     <motion.div
                       key={`${item._id}-${item.color}-${index}`}
@@ -516,7 +515,6 @@ export default function CheckoutPage() {
           </div>
         </div>
 
-        <Newsletter />
         <Footer />
       </div>
 

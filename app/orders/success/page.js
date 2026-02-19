@@ -6,7 +6,6 @@ import { CheckCircle, Package, Home } from 'lucide-react';
 import Link from 'next/link';
 import Sidebar from '@/components/sections/Sidebar';
 import Footer from '@/components/sections/Footer';
-import Newsletter from '@/components/sections/Newsletter';
 import ScrollToTop from '@/components/ScrollToTop';
 import { useCart } from '@/context/CartContext';
 
@@ -91,7 +90,6 @@ export default function OrderSuccessPage() {
           </motion.div>
         </div>
 
-        <Newsletter />
         <Footer />
       </div>
 
