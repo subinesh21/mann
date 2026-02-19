@@ -286,7 +286,7 @@
 
 /* Footer Area - FIXED */
 .footer_area {
-  background-color: #252525;
+  background-color: #6d6d6d;
   padding: 10px 0;
   width: 100vw;
   margin-left: -280px;
@@ -321,7 +321,7 @@
 }
 
 .copywrite {
-  color: #6b6b6b;
+  color: #ffffff;
   font-size: 12px;
   margin-top: 20px;
 }

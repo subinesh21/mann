@@ -225,7 +225,6 @@ export default function CheckoutPage() {
               </Link>
             </div>
           </div>
-          <Newsletter />
           <Footer />
         </div>
         <ScrollToTop visible={showScrollTop} />
@@ -252,7 +251,6 @@ export default function CheckoutPage() {
               </Link>
             </div>
           </div>
-          <Newsletter />
           <Footer />
         </div>
         <ScrollToTop visible={showScrollTop} />
@@ -491,7 +489,7 @@ export default function CheckoutPage() {
                   <button
                     type="submit"
                     disabled={isPlacingOrder}
-                    className="w-full bg-[#fbb710] hover:bg-[#131212] text-white font-medium py-4 px-6 rounded-none transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full bg-[#fbb710] hover:bg-[#52dd28ff] text-white font-medium py-4 px-6 rounded-none transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isPlacingOrder ? (
                       <>

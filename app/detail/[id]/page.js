@@ -164,6 +164,16 @@ export default function ProductDetailsPage() {
     return colors[colorName] || '#CCCCCC';
   };
 
+  // Get text color based on background color (for better contrast)
+  const getTextColorForBackground = (bgColor) => {
+    // For light colors, return dark text; for dark colors, return light text
+    const lightColors = ['#B2FFFF', '#F5F5DC', '#D8C59F', '#EFDECD', '#FFC0CB', '#FFFFFF', '#FFFDD0'];
+    if (lightColors.includes(bgColor)) {
+      return '#131212'; // dark text for light backgrounds
+    }
+    return '#FFFFFF'; // white text for dark backgrounds
+  };
+
   const formatPrice = (price) => {
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
@@ -330,21 +340,34 @@ export default function ProductDetailsPage() {
               {product.colors && product.colors.length > 0 && (
                 <div className="mb-6">
                   <h4 className="text-sm font-medium text-[#131212] mb-3">
-                    Color: <span className="text-[#fbb710] ml-1">{selectedColor}</span>
+                    Color: 
+                    <span 
+                      className="ml-2 px-3 py-1 rounded-full text-sm font-medium"
+                      style={{ 
+                        backgroundColor: getColorCode(selectedColor),
+                        color: getTextColorForBackground(getColorCode(selectedColor))
+                      }}
+                    >
+                      {selectedColor}
+                    </span>
                   </h4>
                   <div className="flex flex-wrap gap-2">
                     {product.colors.map((color) => (
                       <button
                         key={color}
                         onClick={() => setSelectedColor(color)}
-                        className={`w-8 h-8 rounded-full border-2 transition-all ${
+                        className={`w-10 h-10 rounded-full border-2 transition-all flex items-center justify-center text-xs font-medium ${
                           selectedColor === color 
-                            ? 'border-[#131212] ring-2 ring-[#fbb710]' 
-                            : 'border-gray-300 hover:border-[#6b6b6b]'
+                            ? 'border-[#131212] ring-2 ring-[#fbb710] scale-110' 
+                            : 'border-gray-300 hover:scale-110'
                         }`}
-                        style={{ backgroundColor: getColorCode(color) }}
+                        style={{ 
+                          backgroundColor: getColorCode(color),
+                          color: getTextColorForBackground(getColorCode(color))
+                        }}
                         title={color}
-                      />
+                      >
+                      </button>
                     ))}
                   </div>
                 </div>
@@ -378,7 +401,7 @@ export default function ProductDetailsPage() {
               <button
                 onClick={handleAddToCart}
                 disabled={!product.inStock}
-                className="w-full h-14 bg-[#52dd28ff] text-white text-base font-semibold hover:bg-[#e5a80f] transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#fbb710]"
+                className="w-full h-14 bg-[#fbb710] text-white text-base font-semibold hover:bg-[#52dd28ff] transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#52dd28ff]"
               >
                 <ShoppingCart className="inline-block mr-2 w-5 h-5" />
                 {product.inStock ? 'Add to cart' : 'Out of Stock'}

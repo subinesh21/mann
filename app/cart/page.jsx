@@ -162,7 +162,7 @@ export default function CartPage() {
 
                     <Link
                       href="/checkout"
-                      className="block w-full bg-[#fbb710] text-white text-center py-3 hover:bg-[#131212] transition-colors"
+                      className="block w-full bg-[#fbb710] text-white text-center py-3 hover:bg-[#52dd28ff] transition-colors"
                     >
                       Proceed to Checkout
                     </Link>

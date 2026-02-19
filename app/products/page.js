@@ -224,7 +224,7 @@ export default function ProductsPage() {
                             {product.colors.slice(0, 4).map((color, i) => (
                               <div
                                 key={i}
-                                className="w-4 h-4 rounded-full border border-gray-200"
+                                className="w-4 h-4 rounded-box border border-gray-200"
                                 style={{ backgroundColor: color.toLowerCase() }}
                                 title={color}
                               />
