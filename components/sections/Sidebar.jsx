@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
-import { Mail, Facebook, Twitter, Instagram } from 'lucide-react';
+import { Mail, Facebook, Twitter, Instagram, FileText } from 'lucide-react';
 
 const navItems = [
   { name: 'Home', href: '/' },
@@ -15,7 +15,6 @@ const navItems = [
 
 export default function Sidebar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const pathname = usePathname();
   const { cartCount } = useCart();
   const { user, isAuthenticated, logout } = useAuth();
@@ -89,41 +88,45 @@ export default function Sidebar() {
           </ul>
         </nav>
 
-        {/* Search button - Increased left margin */}
-        <div className="cart-fav-search mb-6 ml-4">
-          <button 
-            onClick={() => setIsSearchOpen(!isSearchOpen)}
-            className="search-nav block w-full text-left"
+        {/* Blogs Button - Same style as Search */}
+        <div className="mb-4 ml-4">
+          <a 
+            href="/blogs" 
+            className="flex items-center w-full text-left group"
           >
-            <i className="fa fa-search mr-4 text-[#6b6b6b]"></i>
-            Search
-          </button>
+            <FileText className="w-5 h-5 mr-4 text-[#6b6b6b] group-hover:text-[#52dd28ff] transition-colors" />
+            <span className="text-sm font-medium text-[#131212] group-hover:text-[#52dd28ff] transition-colors">
+              Blogs
+            </span>
+          </a>
         </div>
 
-        {/* Search Form - Increased left margin and bottom margin */}
-        {isSearchOpen && (
-          <div className="mb-12 ml-4">
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                setIsSearchOpen(false);
-              }}
-            >
-              <input 
-                type="search" 
-                placeholder="Type your keyword..."
-                className="w-full px-4 py-3 border border-[#ebebeb] text-sm focus:outline-none focus:border-[#fbb710]"
-                autoFocus
-              />
-            </form>
+        {/* Search Section - Always Open */}
+        <div className="mb-6 ml-4">
+          <div className="flex items-center mb-3">
+            <i className="fa fa-search mr-4 text-[#6b6b6b]"></i>
+            <span className="text-sm font-medium text-[#131212]">Search</span>
           </div>
-        )}
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              // Handle search submission here
+              console.log('Search submitted');
+            }}
+          >
+            <input 
+              type="search" 
+              placeholder="Type your keyword..."
+              className="w-full px-4 py-3 border border-[#ebebeb] text-sm focus:outline-none focus:border-[#52dd28ff]"
+            />
+          </form>
+        </div>
 
         {/* Account - Increased left margin, vertical padding, and bottom margin */}
-        <div className=" pt-6 pb-6 ml-4 border-t border-[#ebebeb]">
+        <div className="pt-6 pb-6 ml-4 border-t border-[#ebebeb]">
           {isAuthenticated ? (
             <div className="space-y-4">
-              <a href="/account" className="flex items-center text-sm text-[#52dd28ff ] hover:text-[#52dd28ff] transition-colors">
+              <a href="/account" className="flex items-center text-sm text-[#52dd28ff] hover:text-[#52dd28ff] transition-colors">
                 <i className="fa fa-user mr-4"></i>
                 Hi, {user?.name?.split(' ')[0]}
               </a>
@@ -136,7 +139,7 @@ export default function Sidebar() {
               </button>
             </div>
           ) : (
-            <a href="/account" className="flex items-center text-sm text-[#6b6b6b] hover:text-[#fbb710] transition-colors">
+            <a href="/account" className="flex items-center text-sm text-[#6b6b6b] hover:text-[#52dd28ff] transition-colors">
               <i className="fa fa-user mr-4"></i>
               Account
             </a>
@@ -144,17 +147,17 @@ export default function Sidebar() {
         </div>
 
         {/* Social Button - Increased horizontal gap between icons */}
-        <div className="social-info flex justify-between mt-2 ">
-          <a href="#" className="hover:text-[#fbb710] transition-colors">
+        <div className="social-info flex justify-between mt-2">
+          <a href="#" className="hover:text-[#52dd28ff] transition-colors">
             <Mail className="w-6 h-6" />
           </a>
-          <a href="#" className="hover:text-[#fbb710] transition-colors">
+          <a href="#" className="hover:text-[#52dd28ff] transition-colors">
             <Facebook className="w-6 h-6" />
           </a>
-          <a href="#" className="hover:text-[#fbb710] transition-colors">
+          <a href="#" className="hover:text-[#52dd28ff] transition-colors">
             <Twitter className="w-6 h-6" />
           </a>
-          <a href="#" className="hover:text-[#fbb710] transition-colors">
+          <a href="#" className="hover:text-[#52dd28ff] transition-colors">
             <Instagram className="w-6 h-6" />
           </a>
         </div>

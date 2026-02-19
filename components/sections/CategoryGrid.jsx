@@ -269,7 +269,7 @@ export default function CategoryGrid() {
 
             {/* Text overlay with manual positioning and styling */}
             <div className={`absolute ${getTextPosition(item.textPosition)} ${item.padding}`}>
-              <div className="w-10 h-[3px] bg-[#fbb710] mb-3" />
+              <div className="w-10 h-[3px] bg-[#52dd28ff] mb-3" />
               <p className="text-sm text-white font-medium">
                 From ${item.price}
               </p>
