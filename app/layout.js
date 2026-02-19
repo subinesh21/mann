@@ -28,8 +28,8 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${openSans.variable} ${poppins.variable}`}>
       <head>
-        <title>CGG - Sustainable Products</title>
-        <meta name="description" content="Sustainable, earth-friendly products" />
+        <title>MAnn - Sustainable Products</title>
+        <meta name="description" content="Sustainable products" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
       </head>
       <body className="bg-white">
