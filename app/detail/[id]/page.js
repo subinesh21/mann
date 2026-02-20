@@ -6,6 +6,7 @@ import { useParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { ShoppingCart, Star, Minus, Plus } from 'lucide-react';
 import Sidebar from '@/components/sections/Sidebar';
+import MobileNav from '@/components/MobileNav';
 import Footer from '@/components/sections/Footer';
 import ScrollToTop from '@/components/ScrollToTop';
 import { useCart } from '@/context/CartContext';
@@ -186,11 +187,9 @@ export default function ProductDetailsPage() {
     return (
       <div className="min-h-screen bg-white">
         <Sidebar />
-        <div className="main-content-wrapper">
-          <div className="h-14 lg:hidden"></div>
-          <div className="flex items-center justify-center py-24">
-            <div className="w-12 h-12 border-4 border-[#fbb710] border-t-transparent rounded-full animate-spin"></div>
-          </div>
+        <MobileNav />
+        <div className="lg:ml-[280px] flex items-center justify-center min-h-screen">
+          <div className="w-12 h-12 border-4 border-[#fbb710] border-t-transparent rounded-full animate-spin"></div>
         </div>
       </div>
     );
@@ -200,23 +199,21 @@ export default function ProductDetailsPage() {
     return (
       <div className="min-h-screen bg-white">
         <Sidebar />
-        <div className="main-content-wrapper">
-          <div className="h-14 lg:hidden"></div>
-          <div className="flex items-center justify-center py-24">
-            <div className="text-center">
-              <h1 className="text-2xl font-heading font-semibold text-[#131212] mb-2">
-                Product not found
-              </h1>
-              <p className="text-[#6b6b6b] mb-4">
-                The product you are looking for does not exist.
-              </p>
-              <Link
-                href="/products/allproducts"
-                className="amado-btn inline-block"
-              >
-                Browse Products
-              </Link>
-            </div>
+        <MobileNav />
+        <div className="lg:ml-[280px] flex items-center justify-center min-h-screen">
+          <div className="text-center px-4">
+            <h1 className="text-xl font-heading font-semibold text-[#131212] mb-2">
+              Product not found
+            </h1>
+            <p className="text-sm text-[#6b6b6b] mb-4">
+              The product you are looking for does not exist.
+            </p>
+            <Link
+              href="/products"
+              className="inline-block px-4 py-2 bg-[#fbb710] text-white text-sm hover:bg-[#52dd28ff] transition-colors"
+            >
+              Browse Products
+            </Link>
           </div>
         </div>
       </div>
@@ -226,33 +223,34 @@ export default function ProductDetailsPage() {
   return (
     <div className="min-h-screen bg-white">
       <Sidebar />
+      <MobileNav />
 
-      <div className="main-content-wrapper">
+      <div className="lg:ml-[280px] flex flex-col min-h-screen">
         <div className="h-14 lg:hidden"></div>
 
-        <div className="min-h-screen ml-60">
-          {/* Breadcrumb */}
-          <div className="px-4 sm:px-6 lg:px-8 py-4 text-xs font-medium tracking-wide text-[#6b6b6b] flex items-center gap-2 flex-wrap">
-            <Link href="/" className="hover:text-[#131212] transition-colors">
-              HOME
-            </Link>
-            <span>&gt;</span>
-            <Link href="/products/allproducts" className="hover:text-[#131212] transition-colors">
-              SHOP
-            </Link>
-            <span>&gt;</span>
-            <Link href={`/products/allproducts#${product.category}`} className="hover:text-[#131212] transition-colors capitalize">
-              {product.category}
-            </Link>
-            <span>&gt;</span>
-            <span className="text-[#131212]">{product.name}</span>
-          </div>
+        {/* Breadcrumb - Mobile Optimized */}
+        <div className="px-3 sm:px-4 lg:px-8 py-3 text-[10px] sm:text-xs font-medium tracking-wide text-[#6b6b6b] flex items-center gap-1.5 sm:gap-2 flex-wrap">
+          <Link href="/" className="hover:text-[#131212] transition-colors">
+            HOME
+          </Link>
+          <span>&gt;</span>
+          <Link href="/products" className="hover:text-[#131212] transition-colors">
+            SHOP
+          </Link>
+          <span>&gt;</span>
+          <Link href={`/products#${product.category}`} className="hover:text-[#131212] transition-colors capitalize">
+            {product.category}
+          </Link>
+          <span>&gt;</span>
+          <span className="text-[#131212] truncate max-w-[120px] sm:max-w-none">{product.name}</span>
+        </div>
 
-          {/* Main Content */}
-          <div className="flex flex-col lg:flex-row gap-8 px-4 sm:px-6 lg:px-8 pb-16">
+        {/* Main Content */}
+        <div className="flex-1 px-3 sm:px-4 lg:px-8 pb-12">
+          <div className="flex flex-col lg:flex-row gap-6 lg:gap-10">
             {/* Image Gallery */}
-            <div className="flex-1 max-w-[600px]">
-              <div className="w-full aspect-[4/5] overflow-hidden bg-[#f5f7fa] mb-4">
+            <div className="w-full lg:max-w-[600px]">
+              <div className="w-full aspect-[4/5] overflow-hidden bg-[#f5f7fa] mb-2 sm:mb-3 lg:mb-4">
                 <img
                   src={productImages[selectedImage] || product.primaryImage || product.image}
                   alt={`${product.name} - ${selectedColor} - View ${selectedImage + 1}`}
@@ -262,7 +260,7 @@ export default function ProductDetailsPage() {
               
               {/* Thumbnail Images - Exactly 3 boxes */}
               {productImages.length > 1 && (
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-3 gap-1 sm:gap-2 lg:gap-3">
                   {productImages.slice(1).map((img, i) => (
                     <button
                       key={i}
@@ -283,66 +281,67 @@ export default function ProductDetailsPage() {
             </div>
 
             {/* Product Info */}
-            <div className="flex-1 max-w-[500px] pt-4">
+            <div className="flex-1 max-w-[500px] pt-2 lg:pt-4">
               {/* Price bar */}
-              <div className="w-12 h-[3px] bg-[#fbb710] mb-4" />
+              <div className="w-8 sm:w-10 lg:w-12 h-[2px] sm:h-[3px] bg-[#fbb710] mb-3 sm:mb-4" />
               
-              <h1 className="text-3xl font-bold text-[#131212] mb-3">
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#131212] mb-2 lg:mb-3">
                 {product.name}
               </h1>
-              <p className="text-2xl font-bold text-[#fbb710] mb-1">
+              <p className="text-lg sm:text-xl lg:text-2xl font-bold text-[#fbb710] mb-1">
                 {formatPrice(product.price)}
               </p>
               {product.originalPrice && product.originalPrice > product.price && (
-                <p className="text-sm text-[#6b6b6b] line-through mb-2">
+                <p className="text-xs sm:text-sm text-[#6b6b6b] line-through mb-2">
                   {formatPrice(product.originalPrice)}
                 </p>
               )}
+              
               {/* Rating */}
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-0.5">
                   {[...Array(5)].map((_, i) => (
                     <Star 
                       key={i} 
-                      className={`w-4 h-4 ${
+                      className={`w-3 h-3 sm:w-4 sm:h-4 ${
                         i < Math.floor(product.rating || 4.5) 
                           ? 'fill-[#fbb710] text-[#fbb710]' 
                           : 'text-gray-300'
                       }`}
                     />
                   ))}
-                  <span className="ml-2 text-sm text-[#6b6b6b]">
+                  <span className="ml-1 sm:ml-2 text-[10px] sm:text-sm text-[#6b6b6b]">
                     ({product.reviews || 0} reviews)
                   </span>
                 </div>
-                <button className="text-sm text-[#6b6b6b] hover:text-[#fbb710] underline">
+                <button className="text-[10px] sm:text-sm text-[#6b6b6b] hover:text-[#fbb710] underline">
                   Write A Review
                 </button>
               </div>
 
               {/* Stock Status */}
-              <div className="flex items-center gap-2 mb-6">
+              <div className="flex items-center gap-1.5 sm:gap-2 mb-4 sm:mb-6">
                 <span 
-                  className="w-2 h-2 rounded-full" 
+                  className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full" 
                   style={{ backgroundColor: product.inStock ? '#22c55e' : '#ef4444' }}
                 />
-                <span className="text-sm text-[#6b6b6b]">
+                <span className="text-xs sm:text-sm text-[#6b6b6b]">
                   {product.inStock ? 'In Stock' : 'Out of Stock'}
                 </span>
               </div>
 
               {/* Description */}
-              <p className="text-[#6b6b6b] leading-relaxed mb-8">
+              <p className="text-xs sm:text-sm text-[#6b6b6b] leading-relaxed mb-6 sm:mb-8">
                 {product.description}
               </p>
 
               {/* Color Selection */}
               {product.colors && product.colors.length > 0 && (
-                <div className="mb-6">
-                  <h4 className="text-sm font-medium text-[#131212] mb-3">
+                <div className="mb-5 sm:mb-6">
+                  <h4 className="text-xs sm:text-sm font-medium text-[#131212] mb-2 sm:mb-3">
                     Color: 
                     <span 
-                      className="ml-2 px-3 py-1 rounded-full text-sm font-medium"
+                      className="ml-2 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-sm font-medium"
                       style={{ 
                         backgroundColor: getColorCode(selectedColor),
                         color: getTextColorForBackground(getColorCode(selectedColor))
@@ -351,12 +350,12 @@ export default function ProductDetailsPage() {
                       {selectedColor}
                     </span>
                   </h4>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-1.5 sm:gap-2">
                     {product.colors.map((color) => (
                       <button
                         key={color}
                         onClick={() => setSelectedColor(color)}
-                        className={`w-10 h-10 rounded-full border-2 transition-all flex items-center justify-center text-xs font-medium ${
+                        className={`w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-full border-2 transition-all ${
                           selectedColor === color 
                             ? 'border-[#131212] ring-2 ring-[#fbb710] scale-110' 
                             : 'border-gray-300 hover:scale-110'
@@ -366,33 +365,32 @@ export default function ProductDetailsPage() {
                           color: getTextColorForBackground(getColorCode(color))
                         }}
                         title={color}
-                      >
-                      </button>
+                      />
                     ))}
                   </div>
                 </div>
               )}
 
               {/* Qty Selector */}
-              <div className="flex items-center gap-4 mb-8">
-                <span className="text-sm font-medium text-[#131212]">Qty</span>
+              <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
+                <span className="text-xs sm:text-sm font-medium text-[#131212]">Qty</span>
                 <div className="flex items-center border border-[#ebebeb]">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="p-2 hover:bg-[#f5f7fa] transition-colors"
+                    className="p-1.5 sm:p-2 hover:bg-[#f5f7fa] transition-colors"
                     disabled={!product.inStock}
                   >
-                    <Minus className="w-4 h-4 text-[#6b6b6b]" />
+                    <Minus className="w-3 h-3 sm:w-4 sm:h-4 text-[#6b6b6b]" />
                   </button>
-                  <span className="w-12 text-center text-sm font-medium text-[#131212]">
+                  <span className="w-8 sm:w-12 text-center text-xs sm:text-sm font-medium text-[#131212]">
                     {quantity}
                   </span>
                   <button
                     onClick={() => setQuantity(quantity + 1)}
-                    className="p-2 hover:bg-[#f5f7fa] transition-colors"
+                    className="p-1.5 sm:p-2 hover:bg-[#f5f7fa] transition-colors"
                     disabled={!product.inStock}
                   >
-                    <Plus className="w-4 h-4 text-[#6b6b6b]" />
+                    <Plus className="w-3 h-3 sm:w-4 sm:h-4 text-[#6b6b6b]" />
                   </button>
                 </div>
               </div>
@@ -401,22 +399,22 @@ export default function ProductDetailsPage() {
               <button
                 onClick={handleAddToCart}
                 disabled={!product.inStock}
-                className="w-full h-14 bg-[#fbb710] text-white text-base font-semibold hover:bg-[#52dd28ff] transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#52dd28ff]"
+                className="w-full h-10 sm:h-12 lg:h-14 bg-[#fbb710] text-white text-xs sm:text-sm lg:text-base font-semibold hover:bg-[#52dd28ff] transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#52dd28ff] flex items-center justify-center gap-1 sm:gap-2"
               >
-                <ShoppingCart className="inline-block mr-2 w-5 h-5" />
+                <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" />
                 {product.inStock ? 'Add to cart' : 'Out of Stock'}
               </button>
 
               {/* Product Meta */}
-              <div className="border-t border-[#ebebeb] pt-6 mt-6">
-                <div className="grid grid-cols-2 gap-4 text-sm">
+              <div className="border-t border-[#ebebeb] pt-4 sm:pt-5 lg:pt-6 mt-4 sm:mt-5 lg:mt-6">
+                <div className="grid grid-cols-2 gap-2 sm:gap-4 text-[10px] sm:text-sm">
                   <div>
                     <span className="font-medium text-[#131212]">Category:</span>
-                    <span className="text-[#6b6b6b] ml-2 capitalize">{product.category}</span>
+                    <span className="text-[#6b6b6b] ml-1 sm:ml-2 capitalize">{product.category}</span>
                   </div>
                   <div>
                     <span className="font-medium text-[#131212]">Brand:</span>
-                    <span className="text-[#6b6b6b] ml-2 uppercase">{product.brand}</span>
+                    <span className="text-[#6b6b6b] ml-1 sm:ml-2 uppercase">{product.brand}</span>
                   </div>
                 </div>
               </div>

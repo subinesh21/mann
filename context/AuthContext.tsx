@@ -90,7 +90,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return data.user;
       } else {
         toast.error(data.message || 'Login failed');
-        throw new Error(data.message);
       }
     } catch (error) {
       console.error('Login error:', error);

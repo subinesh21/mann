@@ -35,9 +35,9 @@ export default function ProductCard({ product, categoryImage }) {
   // Get the current image based on hover state
   const getCurrentImage = () => {
     if (isHovered && product.hoverImage) {
-      return product.hoverImage; // Show hover image when hovered
+      return product.hoverImage;
     }
-    return product.primaryImage || product.image || categoryImage || '/images/product-chai-cups.jpg'; // Show primary image by default
+    return product.primaryImage || product.image || categoryImage || '/images/product-chai-cups.jpg';
   };
 
   return (
@@ -47,36 +47,36 @@ export default function ProductCard({ product, categoryImage }) {
       onMouseLeave={() => setIsHovered(false)}
     >
       <Link href={`/detail/${product._id || product.id}`}>
-        <div className="relative aspect-square bg-[#f5f7fa] overflow-hidden mb-4">
+        <div className="relative aspect-square bg-[#f5f7fa] overflow-hidden mb-2 sm:mb-3 lg:mb-4">
           <img
             src={getCurrentImage()}
             alt={product.name}
-            className="w-full h-full object-cover transition-all duration-500"
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
             onError={(e) => {
               e.target.src = categoryImage || '/images/product-chai-cups.jpg';
             }}
           />
           
-          {/* Quick Actions */}
-          <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-2 opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+          {/* Quick Actions - Desktop only, visible on hover */}
+          <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-3 opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300 lg:flex">
             <button
               onClick={handleAddToCart}
               disabled={!product.inStock}
-              className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-[#131212] hover:text-[#fbb710] hover:shadow-md transition-all disabled:opacity-50"
+              className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-[#131212] hover:text-[#fbb710] hover:shadow-lg transition-all duration-300 disabled:opacity-50 transform hover:scale-110"
               aria-label="Add to cart"
             >
               <ShoppingCart className="w-5 h-5" />
             </button>
             <button
               onClick={(e) => e.preventDefault()}
-              className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-[#131212] hover:text-[#fbb710] hover:shadow-md transition-all"
+              className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-[#131212] hover:text-[#fbb710] hover:shadow-lg transition-all duration-300 transform hover:scale-110"
               aria-label="Quick view"
             >
               <Eye className="w-5 h-5" />
             </button>
             <button
               onClick={(e) => e.preventDefault()}
-              className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-[#131212] hover:text-[#fbb710] hover:shadow-md transition-all"
+              className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-[#131212] hover:text-[#fbb710] hover:shadow-lg transition-all duration-300 transform hover:scale-110"
               aria-label="Add to wishlist"
             >
               <Heart className="w-5 h-5" />
@@ -85,25 +85,37 @@ export default function ProductCard({ product, categoryImage }) {
 
           {/* Out of Stock Badge */}
           {!product.inStock && (
-            <div className="absolute top-3 left-3 bg-gray-500 text-white text-xs font-medium px-2 py-1 rounded">
+            <div className="absolute top-2 left-2 bg-gray-500 text-white text-[10px] lg:text-xs font-medium px-1.5 lg:px-2 py-0.5 lg:py-1 rounded">
               Out of Stock
             </div>
           )}
         </div>
       </Link>
-
+      
       <Link href={`/detail/${product._id || product.id}`}>
-        <h3 className="text-sm text-black font-medium line-clamp-2 mb-2 group-hover:text-[#fbb710] transition-colors">
+        {/* Mobile version */}
+        <h6 
+          className="block lg:hidden text-black font-medium line-clamp-2 mb-1 group-hover:text-[#fbb710] transition-colors"
+          style={{ fontSize: '15px' }}
+        >
           {product.name}
-        </h3>
+        </h6>
+        
+        {/* Desktop version */}
+        <h5 
+          className="hidden lg:block text-black font-medium line-clamp-2 mb-2 group-hover:text-[#fbb710] transition-colors"
+          style={{ fontSize: '16px' }}
+        >
+          {product.name}
+        </h5>
       </Link>
 
-      <div className="flex items-center gap-2">
-        <span className="text-[#fbb710] font-semibold">
+      <div className="flex items-center gap-1 lg:gap-2">
+        <span className="text-[#fbb710] font-semibold text-xs sm:text-sm lg:text-base">
           {formatPrice(product.price)}
         </span>
         {product.originalPrice && (
-          <span className="text-sm text-[#6b6b6b] line-through">
+          <span className="text-[10px] sm:text-xs text-[#6b6b6b] line-through">
             {formatPrice(product.originalPrice)}
           </span>
         )}
@@ -111,18 +123,18 @@ export default function ProductCard({ product, categoryImage }) {
 
       {/* Color options */}
       {product.colors && product.colors.length > 0 && (
-        <div className="flex flex-wrap gap-1 mt-2">
-          {product.colors.slice(0, 4).map((color, i) => (
+        <div className="flex flex-wrap gap-0.5 lg:gap-1 mt-1 lg:mt-2">
+          {product.colors.slice(0, 3).map((color, i) => (
             <div
               key={i}
-              className="w-4 h-4 rounded-box border border-gray-200"
+              className="w-3 h-3 lg:w-4 lg:h-4 rounded-full border border-gray-200"
               style={{ backgroundColor: color.toLowerCase() }}
               title={color}
             />
           ))}
-          {product.colors.length > 4 && (
-            <span className="text-xs text-[#6b6b6b]">
-              +{product.colors.length - 4}
+          {product.colors.length > 3 && (
+            <span className="text-[8px] lg:text-xs text-[#6b6b6b]">
+              +{product.colors.length - 3}
             </span>
           )}
         </div>

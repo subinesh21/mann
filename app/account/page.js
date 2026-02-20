@@ -4,16 +4,16 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Eye, EyeOff, Mail, Lock, User, ArrowRight, Package, 
-  MapPin, Phone, IndianRupee, Calendar, CheckCircle, 
+  MapPin, Phone, Calendar, CheckCircle, 
   Clock, Truck, XCircle, ChevronDown, ChevronUp, 
-  ShoppingBag, LogOut, Home, Chrome, AlertCircle,
-  Users, ShoppingCart, BarChart3
+  ShoppingBag, LogOut, Chrome, Shield
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
 import { auth } from '@/lib/firebase';
 import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import Sidebar from '@/components/sections/Sidebar';
+import MobileNav from '@/components/MobileNav';
 import { toast } from 'react-toastify';
 
 // Status config for orders
@@ -156,12 +156,12 @@ function UserInfoCard({ user, orders, onProfileUpdate }) {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 mb-8 transition-all duration-300 hover:shadow-xl"
+      className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-5 lg:p-6 mb-4 sm:mb-6 lg:mb-8 transition-all duration-300 hover:shadow-md"
     >
       {isEditing ? (
         <div>
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-semibold text-gray-900">Edit Shipping Details</h2>
+          <div className="flex items-center justify-between mb-4 sm:mb-5 lg:mb-6">
+            <h2 className="text-base sm:text-lg font-semibold text-gray-900">Edit Shipping Details</h2>
             <button
               onClick={() => {
                 setIsEditing(false);
@@ -169,16 +169,16 @@ function UserInfoCard({ user, orders, onProfileUpdate }) {
                   setFormData(profile.shippingAddress);
                 }
               }}
-              className="text-sm text-gray-600 hover:text-gray-900"
+              className="text-xs sm:text-sm text-gray-600 hover:text-gray-900"
             >
               Cancel
             </button>
           </div>
           
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5 lg:space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2 uppercase tracking-wide">
+                <label className="block text-xs font-medium text-gray-700 mb-1 uppercase tracking-wide">
                   Full Name *
                 </label>
                 <input
@@ -186,13 +186,13 @@ function UserInfoCard({ user, orders, onProfileUpdate }) {
                   name="fullName"
                   value={formData.fullName}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-300 hover:border-gray-400"
+                  className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#52dd28ff]/20 focus:border-[#52dd28ff] transition-all duration-300 hover:border-gray-400"
                   placeholder="Enter your full name"
                   required
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2 uppercase tracking-wide">
+                <label className="block text-xs font-medium text-gray-700 mb-1 uppercase tracking-wide">
                   Phone Number *
                 </label>
                 <input
@@ -200,7 +200,7 @@ function UserInfoCard({ user, orders, onProfileUpdate }) {
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-300 hover:border-gray-400"
+                  className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#52dd28ff]/20 focus:border-[#52dd28ff] transition-all duration-300 hover:border-gray-400"
                   placeholder="10-digit mobile number"
                   pattern="[0-9]{10}"
                   maxLength={10}
@@ -210,7 +210,7 @@ function UserInfoCard({ user, orders, onProfileUpdate }) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2 uppercase tracking-wide">
+              <label className="block text-xs font-medium text-gray-700 mb-1 uppercase tracking-wide">
                 Address *
               </label>
               <textarea
@@ -218,15 +218,15 @@ function UserInfoCard({ user, orders, onProfileUpdate }) {
                 value={formData.address}
                 onChange={handleChange}
                 rows={2}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none transition-all duration-300 hover:border-gray-400"
+                className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#52dd28ff]/20 focus:border-[#52dd28ff] resize-none transition-all duration-300 hover:border-gray-400"
                 placeholder="Street address, apartment, suite, etc."
                 required
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2 uppercase tracking-wide">
+                <label className="block text-xs font-medium text-gray-700 mb-1 uppercase tracking-wide">
                   City *
                 </label>
                 <input
@@ -234,13 +234,13 @@ function UserInfoCard({ user, orders, onProfileUpdate }) {
                   name="city"
                   value={formData.city}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-300 hover:border-gray-400"
+                  className="w-full px-2 sm:px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#52dd28ff]/20 focus:border-[#52dd28ff] transition-all duration-300 hover:border-gray-400"
                   placeholder="City"
                   required
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2 uppercase tracking-wide">
+                <label className="block text-xs font-medium text-gray-700 mb-1 uppercase tracking-wide">
                   State *
                 </label>
                 <input
@@ -248,32 +248,33 @@ function UserInfoCard({ user, orders, onProfileUpdate }) {
                   name="state"
                   value={formData.state}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-300 hover:border-gray-400"
+                  className="w-full px-2 sm:px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#52dd28ff]/20 focus:border-[#52dd28ff] transition-all duration-300 hover:border-gray-400"
                   placeholder="State"
                   required
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2 uppercase tracking-wide">
-                  ZIP Code *
+              <div className="col-span-2 sm:col-span-1">
+                <label className="block text-xs font-medium text-gray-700 mb-1 uppercase tracking-wide">
+                  ZIP *
                 </label>
                 <input
                   type="text"
                   name="zipCode"
                   value={formData.zipCode}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-300 hover:border-gray-400"
-                  placeholder="ZIP Code"
+                  className="w-full px-2 sm:px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#52dd28ff]/20 focus:border-[#52dd28ff] transition-all duration-300 hover:border-gray-400"
+                  placeholder="ZIP"
+                  maxLength={6}
                   required
                 />
               </div>
             </div>
 
-            <div className="pt-6">
+            <div className="pt-3 sm:pt-4 lg:pt-5">
               <button
                 type="submit"
                 disabled={saving}
-                className="w-full bg-primary text-white font-medium py-3 px-4 rounded-lg hover:bg-primary-dark transition-all duration-300 disabled:opacity-50 shadow-sm hover:shadow-md"
+                className="w-full bg-[#52dd28ff] text-white font-medium py-2.5 sm:py-3 px-4 text-sm rounded-lg hover:bg-[#45b824] transition-all duration-300 disabled:opacity-50 shadow-sm hover:shadow-md"
               >
                 {saving ? 'Saving...' : 'Save Shipping Details'}
               </button>
@@ -282,65 +283,65 @@ function UserInfoCard({ user, orders, onProfileUpdate }) {
         </div>
       ) : (
         <div>
-          <div className="flex flex-col sm:flex-row sm:items-start gap-6">
-            <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm">
-              <span className="text-3xl font-bold text-primary">
+          <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-5 lg:gap-6">
+            <div className="w-16 h-16 sm:w-18 sm:h-18 lg:w-20 lg:h-20 bg-[#52dd28ff]/10 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm">
+              <span className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#52dd28ff]">
                 {user?.name?.charAt(0).toUpperCase()}
               </span>
             </div>
             <div className="flex-1 min-w-0">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">{user?.name}</h2>
-              <p className="text-gray-600 flex items-center gap-2 text-sm">
-                <Mail className="w-4 h-4" />
+              <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-1">{user?.name}</h2>
+              <p className="text-xs sm:text-sm text-gray-600 flex items-center gap-1 sm:gap-2">
+                <Mail className="w-3 h-3 sm:w-4 sm:h-4" />
                 {user?.email}
               </p>
               
-              <div className="mt-6 pt-6 border-t border-gray-200">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-sm font-medium text-gray-700 flex items-center gap-2 uppercase tracking-wide">
-                    <MapPin className="w-4 h-4" />
+              <div className="mt-4 sm:mt-5 lg:mt-6 pt-4 sm:pt-5 border-t border-gray-200">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-xs sm:text-sm font-medium text-gray-700 flex items-center gap-1 sm:gap-2 uppercase tracking-wide">
+                    <MapPin className="w-3 h-3 sm:w-4 sm:h-4" />
                     Shipping Address
                   </h3>
                   <button
                     onClick={() => setIsEditing(true)}
-                    className="text-sm text-primary hover:text-primary-dark font-medium transition-colors"
+                    className="text-xs sm:text-sm text-[#52dd28ff] hover:text-[#45b824] font-medium transition-colors"
                   >
                     {hasAddress ? 'Edit' : 'Add'}
                   </button>
                 </div>
                 
                 {loading ? (
-                  <div className="flex items-center gap-2 text-gray-500">
-                    <div className="w-4 h-4 border-2 border-gray-300 border-t-transparent rounded-full animate-spin"></div>
+                  <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-500">
+                    <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-gray-300 border-t-transparent rounded-full animate-spin"></div>
                     Loading...
                   </div>
                 ) : hasAddress ? (
-                  <div className="text-sm text-gray-600 space-y-1">
-                    <p className="font-medium text-gray-900">{profile.shippingAddress.fullName}</p>
+                  <div className="text-xs sm:text-sm text-gray-600 space-y-0.5">
+                    <p className="font-medium text-gray-900 text-sm">{profile.shippingAddress.fullName}</p>
                     <p>{profile.shippingAddress.address}</p>
                     <p>{profile.shippingAddress.city}, {profile.shippingAddress.state} - {profile.shippingAddress.zipCode}</p>
-                    <p className="flex items-center gap-2">
+                    <p className="flex items-center gap-1 mt-1">
                       <Phone className="w-3 h-3" />
                       {profile.shippingAddress.phone}
                     </p>
                   </div>
                 ) : (
-                  <p className="text-sm text-gray-500">No shipping address added</p>
+                  <p className="text-xs sm:text-sm text-gray-500">No shipping address added</p>
                 )}
               </div>
             </div>
             
-            <div className="flex gap-4 text-center sm:border-l sm:pl-4 sm:ml-2">
-              <div>
-                <p className="text-2xl font-bold text-gray-900">{orders?.length || 0}</p>
-                <p className="text-sm text-gray-600">Total Orders</p>
+            <div className="flex w-full sm:w-auto justify-around sm:justify-start gap-3 sm:gap-4 mt-3 sm:mt-0 sm:border-l sm:pl-4 sm:ml-2">
+              <div className="text-center">
+                <p className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">{orders?.length || 0}</p>
+                <p className="text-[10px] sm:text-xs text-gray-600">Total Orders</p>
               </div>
-              <div className="w-px bg-gray-200"></div>
-              <div>
-                <p className="text-2xl font-bold text-green-600">
+              <div className="w-px bg-gray-200 hidden sm:block"></div>
+              <div className="text-center">
+                <p className="text-lg sm:text-xl lg:text-2xl font-bold text-green-600">
                   {orders?.filter(o => o.status === 'delivered').length || 0}
                 </p>
-                <p className="text-sm text-gray-600">Delivered</p>
+                <p className="text-[10px] sm:text-xs text-gray-600">Delivered</p>
               </div>
             </div>
           </div>
@@ -379,7 +380,7 @@ function AccountDashboard() {
     
     const interval = setInterval(() => {
       fetchOrders();
-    }, 30000); // 30 seconds
+    }, 30000);
     
     return () => clearInterval(interval);
   }, [user?.id]);
@@ -390,20 +391,12 @@ function AccountDashboard() {
       const params = new URLSearchParams();
       params.set('userId', user.id);
       
-      console.log('Fetching orders for user:', user.id);
-      
       const response = await fetch(`/api/orders?${params.toString()}`);
       const data = await response.json();
       
-      console.log('Orders API response:', data);
-      
       if (response.ok) {
         setOrders(data.orders || []);
-        if (data.orders?.length === 0) {
-          console.log('No orders found for user');
-        }
       } else {
-        console.error('Failed to fetch orders:', data.message);
         toast.error(data.message || 'Failed to fetch orders');
         setOrders([]);
       }
@@ -444,19 +437,19 @@ function AccountDashboard() {
     return items?.reduce((sum, item) => sum + (item.quantity || 0), 0) || 0;
   };
 
-  const StatCard = ({ title, value, icon: Icon, color = 'amado-yellow' }) => (
+  const StatCard = ({ title, value, icon: Icon, color = '#52dd28ff' }) => (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white rounded-lg shadow-sm border border-amado-border p-6 hover:shadow-md transition-shadow duration-300"
+      className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-4 lg:p-5 hover:shadow-md transition-shadow duration-300"
     >
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm font-medium text-amado-muted uppercase tracking-wide">{title}</p>
-          <p className="text-2xl font-bold text-amado-dark mt-1">{value}</p>
+          <p className="text-[10px] sm:text-xs font-medium text-gray-600 uppercase tracking-wide">{title}</p>
+          <p className="text-base sm:text-lg lg:text-xl font-bold text-gray-900 mt-0.5">{value}</p>
         </div>
-        <div className={`p-3 bg-${color}/10 rounded-circle`}>
-          <Icon className={`w-6 h-6 text-${color}`} />
+        <div className="p-2 sm:p-2.5 lg:p-3 bg-[#52dd28ff]/10 rounded-full">
+          <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-[#52dd28ff]" />
         </div>
       </div>
     </motion.div>
@@ -493,40 +486,39 @@ function AccountDashboard() {
   };
 
   return (
-    <div className="flex min-h-screen bg-amado-light">
+    <div className="min-h-screen bg-white">
       <Sidebar />
+      <MobileNav />
       
-      {/* Main Content */}
-      <div className="flex-1 lg:ml-0">
-        {/* Mobile header spacer */}
-        <div className="h-16 lg:hidden"></div>
+      <div className="lg:ml-[280px] flex flex-col min-h-screen">
+        <div className="h-14 lg:hidden"></div>
         
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex-1 px-3 sm:px-4 lg:px-6 py-3 sm:py-4 lg:py-6">
           {/* Header */}
-          <div className="mb-8">
+          <div className="mb-3 sm:mb-4 lg:mb-6">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="flex items-center justify-between"
+              className="flex flex-col sm:flex-row sm:items-center justify-between gap-3"
             >
               <div>
-                <h1 className="text-3xl font-bold text-amado-dark mb-2">My Account</h1>
-                <p className="text-amado-muted">Manage your profile and orders</p>
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-0.5">My Account</h1>
+                <p className="text-xs sm:text-sm text-gray-600">Manage your profile and orders</p>
               </div>
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center gap-2 sm:gap-3">
                 <Link 
-                  href="/products/allproducts"
-                  className="flex items-center px-4 py-2 bg-amado-yellow text-white rounded-lg font-semibold hover:bg-amado-dark transition-colors duration-300"
+                  href="/products"
+                  className="flex items-center px-3 sm:px-4 py-1.5 sm:py-2 bg-[#52dd28ff] text-white rounded-lg text-xs sm:text-sm font-medium hover:bg-[#45b824] transition-colors duration-300"
                 >
-                  <ShoppingBag className="w-5 h-5 mr-2" />
-                  <span className="hidden sm:inline">Shop</span>
+                  <ShoppingBag className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                  <span>Shop</span>
                 </Link>
                 <button
                   onClick={logout}
-                  className="flex items-center px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-300 border border-transparent hover:border-red-200"
+                  className="flex items-center px-3 sm:px-4 py-1.5 sm:py-2 text-red-600 hover:bg-red-50 rounded-lg text-xs sm:text-sm font-medium transition-colors duration-300 border border-gray-200 hover:border-red-200"
                 >
-                  <LogOut className="w-5 h-5 mr-2" />
-                  <span className="hidden sm:inline">Logout</span>
+                  <LogOut className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                  <span className="hidden xs:inline">Logout</span>
                 </button>
               </div>
             </motion.div>
@@ -539,25 +531,22 @@ function AccountDashboard() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
+            className="grid grid-cols-3 gap-2 sm:gap-3 lg:gap-4 mb-4 sm:mb-5 lg:mb-6"
           >
             <StatCard
-              title="Total Orders"
+              title="Total"
               value={orders.length}
-              icon={ShoppingCart}
-              color="amado-yellow"
+              icon={ShoppingBag}
             />
             <StatCard
               title="Delivered"
               value={orders.filter(o => o.status === 'delivered').length}
               icon={CheckCircle}
-              color="green-500"
             />
             <StatCard
               title="Pending"
               value={orders.filter(o => o.status === 'pending' || o.status === 'confirmed').length}
               icon={Clock}
-              color="blue-500"
             />
           </motion.div>
 
@@ -566,22 +555,22 @@ function AccountDashboard() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="bg-white rounded-lg shadow-sm border border-amado-border overflow-hidden"
+            className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden"
           >
-            <div className="p-6 border-b border-amado-border bg-amado-light">
+            <div className="p-3 sm:p-4 lg:p-5 border-b border-gray-200 bg-gray-50">
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <div className="p-2 bg-amado-yellow/10 rounded-circle mr-3">
-                    <ShoppingCart className="w-5 h-5 text-amado-yellow" />
+                  <div className="p-1.5 sm:p-2 bg-[#52dd28ff]/10 rounded-full mr-2 sm:mr-3">
+                    <ShoppingBag className="w-3 h-3 sm:w-4 sm:h-4 text-[#52dd28ff]" />
                   </div>
-                  <h2 className="text-xl font-bold text-amado-dark">My Orders</h2>
+                  <h2 className="text-sm sm:text-base lg:text-lg font-bold text-gray-900">My Orders</h2>
                 </div>
                 <button
                   onClick={handleRefresh}
                   disabled={isRefreshing}
-                  className="flex items-center px-4 py-2 text-sm font-medium text-amado-yellow hover:text-amado-dark bg-amado-light hover:bg-amado-yellow/10 rounded-lg transition-colors duration-300 border border-amado-border hover:border-amado-yellow disabled:opacity-50"
+                  className="flex items-center px-2 sm:px-3 py-1 text-[10px] sm:text-xs font-medium text-[#52dd28ff] hover:text-[#45b824] bg-gray-100 hover:bg-[#52dd28ff]/10 rounded-lg transition-colors duration-300 border border-gray-200 hover:border-[#52dd28ff] disabled:opacity-50"
                 >
-                  <svg className={`w-4 h-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className={`w-3 h-3 mr-1 ${isRefreshing ? 'animate-spin' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                   </svg>
                   {isRefreshing ? 'Refreshing...' : 'Refresh'}
@@ -589,28 +578,28 @@ function AccountDashboard() {
               </div>
             </div>
 
-            <div className="p-6">
+            <div className="p-3 sm:p-4 lg:p-5">
               {loading ? (
-                <div className="flex items-center justify-center py-12">
-                  <div className="w-8 h-8 border-4 border-amado-yellow border-t-transparent rounded-full animate-spin"></div>
+                <div className="flex items-center justify-center py-8 sm:py-10 lg:py-12">
+                  <div className="w-6 h-6 sm:w-8 sm:h-8 border-3 border-[#52dd28ff] border-t-transparent rounded-full animate-spin"></div>
                 </div>
               ) : orders.length === 0 ? (
-                <div className="text-center py-12">
-                  <Package className="w-16 h-16 text-amado-gray mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-amado-dark mb-2">No orders found</h3>
-                  <p className="text-amado-muted max-w-md mx-auto mb-6">
-                    You haven't placed any orders yet. Start shopping to see your orders here.
+                <div className="text-center py-6 sm:py-8 lg:py-10">
+                  <Package className="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 text-gray-300 mx-auto mb-3" />
+                  <h3 className="text-sm sm:text-base font-semibold text-gray-900 mb-1">No orders found</h3>
+                  <p className="text-xs sm:text-sm text-gray-600 max-w-md mx-auto mb-4">
+                    You haven't placed any orders yet.
                   </p>
                   <Link
-                    href="/products/allproducts"
-                    className="inline-flex items-center px-6 py-3 bg-amado-yellow text-white rounded-lg font-semibold hover:bg-amado-dark transition-colors duration-300"
+                    href="/products"
+                    className="inline-flex items-center px-4 py-2 bg-[#52dd28ff] text-white rounded-lg text-xs sm:text-sm font-medium hover:bg-[#45b824] transition-colors duration-300"
                   >
-                    <ShoppingBag className="w-5 h-5 mr-2" />
+                    <ShoppingBag className="w-3 h-3 mr-1" />
                     Start Shopping
                   </Link>
                 </div>
               ) : (
-                <div className="space-y-4">
+                <div className="space-y-2 sm:space-y-3">
                   {orders.map((order, index) => {
                     const status = statusConfig[order.status] || statusConfig.pending;
                     const StatusIcon = status.icon;
@@ -622,30 +611,30 @@ function AccountDashboard() {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.05 }}
-                        className="border border-amado-border rounded-lg overflow-hidden hover:shadow-md transition-shadow duration-300"
+                        className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-sm transition-shadow duration-300"
                       >
                         <div 
-                          className="p-5 cursor-pointer hover:bg-amado-light transition-colors duration-200"
+                          className="p-3 sm:p-4 cursor-pointer hover:bg-gray-50 transition-colors duration-200"
                           onClick={() => setExpandedOrder(isExpanded ? null : order.id)}
                         >
-                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                            <div className="flex items-start gap-4">
-                              <div className="w-12 h-12 bg-amado-yellow/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                                <Package className="w-6 h-6 text-amado-yellow" />
+                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3">
+                            <div className="flex items-start gap-2 sm:gap-3">
+                              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[#52dd28ff]/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <Package className="w-4 h-4 sm:w-5 sm:h-5 text-[#52dd28ff]" />
                               </div>
-                              <div className="flex-1">
-                                <div className="flex items-center gap-3 flex-wrap mb-2">
-                                  <h3 className="font-semibold text-amado-dark text-lg">
-                                    Order #{order.orderNumber || order.id?.slice(-8).toUpperCase()}
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2 flex-wrap mb-1">
+                                  <h3 className="text-xs sm:text-sm font-semibold text-gray-900 truncate max-w-[120px] sm:max-w-none">
+                                    #{order.orderNumber || order.id?.slice(-6).toUpperCase()}
                                   </h3>
-                                  <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${status.color}`}>
-                                    <StatusIcon className="w-3 h-3 mr-1" />
+                                  <span className={`inline-flex items-center px-1.5 py-0.5 rounded-full text-[8px] sm:text-xs font-medium ${status.color}`}>
+                                    <StatusIcon className="w-2 h-2 sm:w-3 sm:h-3 mr-0.5" />
                                     {status.label}
                                   </span>
                                 </div>
-                                <div className="flex items-center gap-4 text-sm text-amado-muted">
-                                  <span className="flex items-center gap-1">
-                                    <Calendar className="w-4 h-4" />
+                                <div className="flex items-center gap-2 text-[10px] sm:text-xs text-gray-600">
+                                  <span className="flex items-center gap-0.5">
+                                    <Calendar className="w-2 h-2 sm:w-3 sm:h-3" />
                                     {formatDate(order.createdAt)}
                                   </span>
                                   <span>{getTotalItems(order.items)} items</span>
@@ -653,20 +642,20 @@ function AccountDashboard() {
                               </div>
                             </div>
 
-                            <div className="flex items-center gap-4">
-                              <div className="text-right">
-                                <p className="font-bold text-amado-dark text-lg">
+                            <div className="flex items-center justify-between sm:justify-end gap-2 sm:gap-3">
+                              <div className="text-left sm:text-right">
+                                <p className="text-xs sm:text-sm font-bold text-gray-900">
                                   {formatPrice(order.totalAmount)}
                                 </p>
-                                <p className="text-sm text-amado-muted">
-                                  {order.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online Payment'}
+                                <p className="text-[8px] sm:text-xs text-gray-600">
+                                  {order.paymentMethod === 'cod' ? 'COD' : 'Online'}
                                 </p>
                               </div>
-                              <div className="p-2 bg-amado-light rounded-lg transition-colors duration-300 group-hover:bg-amado-yellow/10">
+                              <div className="p-1.5 bg-gray-50 rounded-lg">
                                 {isExpanded ? (
-                                  <ChevronUp className="w-5 h-5 text-amado-gray" />
+                                  <ChevronUp className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500" />
                                 ) : (
-                                  <ChevronDown className="w-5 h-5 text-amado-gray" />
+                                  <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500" />
                                 )}
                               </div>
                             </div>
@@ -679,38 +668,36 @@ function AccountDashboard() {
                               initial={{ height: 0, opacity: 0 }}
                               animate={{ height: 'auto', opacity: 1 }}
                               exit={{ height: 0, opacity: 0 }}
-                              className="border-t border-amado-border bg-amado-light"
+                              className="border-t border-gray-200 bg-gray-50"
                             >
-                              <div className="p-5 space-y-5">
+                              <div className="p-3 sm:p-4 space-y-3">
+                                {/* Order Items */}
                                 <div>
-                                  <h4 className="font-semibold text-amado-dark mb-3 flex items-center gap-2">
-                                    <Package className="w-4 h-4" />
-                                    Order Items
+                                  <h4 className="text-xs sm:text-sm font-semibold text-gray-900 mb-2 flex items-center gap-1">
+                                    <Package className="w-3 h-3" />
+                                    Items
                                   </h4>
-                                  <div className="space-y-3">
+                                  <div className="space-y-2">
                                     {order.items?.map((item, itemIndex) => (
-                                      <div key={itemIndex} className="flex items-center gap-4 p-4 bg-white rounded-lg border border-amado-border">
+                                      <div key={itemIndex} className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 bg-white rounded-lg border border-gray-200">
                                         <img 
                                           src={item.image || '/images/product-chai-cups.jpg'} 
                                           alt={item.name}
-                                          className="w-16 h-16 object-cover rounded-lg border border-amado-border"
+                                          className="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded-lg border border-gray-200"
                                           onError={(e) => {
                                             e.target.src = '/images/product-chai-cups.jpg';
                                           }}
                                         />
-                                        <div className="flex-1">
-                                          <h5 className="font-medium text-amado-dark">{item.name}</h5>
+                                        <div className="flex-1 min-w-0">
+                                          <h5 className="text-xs font-medium text-gray-900 truncate">{item.name}</h5>
                                           {item.color && (
-                                            <p className="text-sm text-amado-muted">Color: {item.color}</p>
+                                            <p className="text-[10px] text-gray-600">Color: {item.color}</p>
                                           )}
-                                          <p className="text-sm text-amado-muted">Qty: {item.quantity}</p>
+                                          <p className="text-[10px] text-gray-600">Qty: {item.quantity}</p>
                                         </div>
                                         <div className="text-right">
-                                          <p className="font-semibold text-amado-dark">
+                                          <p className="text-xs font-semibold text-gray-900">
                                             {formatPrice(item.price * item.quantity)}
-                                          </p>
-                                          <p className="text-sm text-amado-muted">
-                                            {formatPrice(item.price)} each
                                           </p>
                                         </div>
                                       </div>
@@ -718,26 +705,28 @@ function AccountDashboard() {
                                   </div>
                                 </div>
 
-                                <div className="bg-white rounded-lg p-4 border border-amado-border">
-                                  <h4 className="font-semibold text-amado-dark mb-3 flex items-center gap-2">
-                                    <MapPin className="w-4 h-4" />
-                                    Shipping Address
+                                {/* Shipping Address */}
+                                <div className="bg-white rounded-lg p-2 sm:p-3 border border-gray-200">
+                                  <h4 className="text-xs sm:text-sm font-semibold text-gray-900 mb-1 flex items-center gap-1">
+                                    <MapPin className="w-3 h-3" />
+                                    Shipping
                                   </h4>
-                                  <div className="text-sm text-amado-muted">
-                                    <p className="font-medium text-amado-dark">{order.shippingAddress?.fullName}</p>
+                                  <div className="text-[10px] sm:text-xs text-gray-600">
+                                    <p className="font-medium text-gray-900">{order.shippingAddress?.fullName}</p>
                                     <p>{order.shippingAddress?.address}</p>
                                     <p>{order.shippingAddress?.city}, {order.shippingAddress?.state} - {order.shippingAddress?.zipCode}</p>
-                                    <p className="flex items-center gap-2 mt-2">
-                                      <Phone className="w-4 h-4" />
+                                    <p className="flex items-center gap-1 mt-1">
+                                      <Phone className="w-2 h-2" />
                                       {order.shippingAddress?.phone}
                                     </p>
                                   </div>
                                 </div>
 
-                                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-4 border-t border-amado-border">
+                                {/* Order Total & Cancel */}
+                                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pt-2 border-t border-gray-200">
                                   <div>
-                                    <p className="text-sm text-amado-muted">Order Total</p>
-                                    <p className="text-2xl font-bold text-amado-dark">
+                                    <p className="text-[10px] text-gray-600">Total</p>
+                                    <p className="text-sm sm:text-base font-bold text-gray-900">
                                       {formatPrice(order.totalAmount)}
                                     </p>
                                   </div>
@@ -746,17 +735,17 @@ function AccountDashboard() {
                                     <button
                                       onClick={() => cancelOrder(order.id)}
                                       disabled={cancellingOrder === order.id}
-                                      className="px-4 py-2 bg-red-500 text-white rounded-lg font-medium hover:bg-red-600 transition-colors duration-300 disabled:opacity-50 flex items-center gap-2"
+                                      className="px-3 py-1.5 bg-red-500 text-white rounded-lg text-xs font-medium hover:bg-red-600 transition-colors duration-300 disabled:opacity-50 flex items-center gap-1 w-full sm:w-auto justify-center"
                                     >
                                       {cancellingOrder === order.id ? (
                                         <>
-                                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                          <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
                                           Cancelling...
                                         </>
                                       ) : (
                                         <>
-                                          <XCircle className="w-4 h-4" />
-                                          Cancel Order
+                                          <XCircle className="w-3 h-3" />
+                                          Cancel
                                         </>
                                       )}
                                     </button>
@@ -768,12 +757,11 @@ function AccountDashboard() {
                         </AnimatePresence>
                       </motion.div>
                     );
-                })}
+                  })}
                 </div>
               )}
             </div>
           </motion.div>
-
         </div>
       </div>
     </div>
@@ -784,7 +772,7 @@ function AccountDashboard() {
 function AuthForm() {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
-  const [loginAs, setLoginAs] = useState('user');
+  const [isAdmin, setIsAdmin] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -792,13 +780,6 @@ function AuthForm() {
   });
   const [errors, setErrors] = useState({});
   const { login, register, isLoading } = useAuth();
-  const [showScrollTop, setShowScrollTop] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => setShowScrollTop(window.scrollY > 400);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   const validateForm = () => {
     const newErrors = {};
@@ -812,7 +793,7 @@ function AuthForm() {
     if (!formData.password) {
       newErrors.password = 'Password is required';
     } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+      newErrors.password = 'Min 6 characters';
     }
     
     if (!isLogin && !formData.name) {
@@ -828,6 +809,8 @@ function AuthForm() {
     
     if (!validateForm()) return;
     
+    const loginAs = isAdmin ? 'admin' : 'user';
+    
     if (isLogin) {
       await login(formData.email, formData.password, loginAs);
     } else {
@@ -840,6 +823,8 @@ function AuthForm() {
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
       const idToken = await result.user.getIdToken();
+      
+      const loginAs = isAdmin ? 'admin' : 'user';
       
       const response = await fetch('/api/auth/google/login', {
         method: 'POST',
@@ -888,172 +873,158 @@ function AuthForm() {
   };
 
   return (
-    <div className="flex min-h-screen bg-white">
+    <div className="min-h-screen bg-white">
       <Sidebar />
+      <MobileNav />
       
-      <div className="flex-1 lg:ml-0">
-        <div className="h-16 lg:hidden"></div>
+      <div className="lg:ml-[280px] flex flex-col min-h-screen">
+        <div className="h-14 lg:hidden"></div>
         
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="flex-1 px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
           <div className="flex justify-center">
-            <div className="w-full max-w-md">
+            <div className="w-full max-w-sm">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="bg-white rounded-xl shadow-xl p-8 sm:p-10 border border-gray-200"
+                className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 sm:p-6"
               >
-                <div className="text-center mb-8">
+                <div className="text-center mb-5">
                   <Link href="/" className="inline-block">
-                    <div className="text-4xl font-heading font-bold text-primary mb-2">
-                      <span className="text-gray-800">C</span>GG
+                    <div className="text-3xl font-heading font-bold text-[#52dd28ff] mb-2">
+                      MAnn
                     </div>
                   </Link>
-                  <h1 className="text-2xl font-bold text-gray-900">
+                  <h1 className="text-lg sm:text-xl font-bold text-gray-900">
                     {isLogin ? 'Welcome Back' : 'Create Account'}
                   </h1>
-                  <p className="text-gray-600 mt-2">
+                  <p className="text-xs sm:text-sm text-gray-600 mt-1">
                     {isLogin 
-                      ? 'Sign in to your account to continue' 
-                      : 'Join us to start your sustainable journey'
+                      ? 'Sign in to your account' 
+                      : 'Join the sustainable journey'
                     }
                   </p>
-                  
-                  {isLogin && (
-                    <div className="mt-6 flex justify-center gap-4">
-                      <button
-                        type="button"
-                        onClick={() => setLoginAs('user')}
-                        className={`px-6 py-2 rounded-lg font-medium transition-all duration-300 ${
-                          loginAs === 'user'
-                            ? 'bg-primary text-white shadow-md transform scale-105'
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:shadow-sm'
-                        }`}
-                      >
-                        User
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setLoginAs('admin')}
-                        className={`px-6 py-2 rounded-lg font-medium transition-all duration-300 ${
-                          loginAs === 'admin'
-                            ? 'bg-primary text-white shadow-md transform scale-105'
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:shadow-sm'
-                        }`}
-                      >
-                        Admin
-                      </button>
-                    </div>
-                  )}
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
+
+
+                <form onSubmit={handleSubmit} className="space-y-4">
                   {!isLogin && (
                     <div>
-                      <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2 uppercase tracking-wide">
+                      <label className="text-xs font-medium text-gray-700 mb-1 block uppercase tracking-wide">
                         Full Name
                       </label>
                       <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <User className="h-5 w-5 text-gray-400" />
-                        </div>
+                        <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                         <input
-                          id="name"
                           name="name"
-                          type="text"
                           value={formData.name}
                           onChange={handleChange}
-                          className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-300 ${
-                            errors.name ? 'border-red-500' : 'border-gray-300 hover:border-gray-400'
+                          className={`w-full pl-10 pr-3 py-2.5 text-sm border rounded-lg focus:ring-2 focus:ring-[#52dd28ff]/20 focus:border-[#52dd28ff] ${
+                            errors.name ? 'border-red-500' : 'border-gray-300'
                           }`}
-                          placeholder="Enter your full name"
+                          placeholder="Full name"
                         />
                       </div>
-                      {errors.name && <p className="mt-1 text-sm text-red-500">{errors.name}</p>}
+                      {errors.name && <p className="text-xs text-red-500 mt-1">{errors.name}</p>}
                     </div>
                   )}
 
                   <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2 uppercase tracking-wide">
-                      Email Address
+                    <label className="text-xs font-medium text-gray-700 mb-1 block uppercase tracking-wide">
+                      Email
                     </label>
                     <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Mail className="h-5 w-5 text-gray-400" />
-                      </div>
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                       <input
-                        id="email"
                         name="email"
                         type="email"
                         value={formData.email}
                         onChange={handleChange}
-                        className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-300 ${
-                          errors.email ? 'border-red-500' : 'border-gray-300 hover:border-gray-400'
+                        className={`w-full pl-10 pr-3 py-2.5 text-sm border rounded-lg focus:ring-2 focus:ring-[#52dd28ff]/20 focus:border-[#52dd28ff] ${
+                          errors.email ? 'border-red-500' : 'border-gray-300'
                         }`}
-                        placeholder="Enter your email"
+                        placeholder="your@email.com"
                       />
                     </div>
-                    {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email}</p>}
+                    {errors.email && <p className="text-xs text-red-500 mt-1">{errors.email}</p>}
                   </div>
 
                   <div>
-                    <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2 uppercase tracking-wide">
+                    <label className="text-xs font-medium text-gray-700 mb-1 block uppercase tracking-wide">
                       Password
                     </label>
                     <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Lock className="h-5 w-5 text-gray-400" />
-                      </div>
+                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                       <input
-                        id="password"
                         name="password"
                         type={showPassword ? 'text' : 'password'}
                         value={formData.password}
                         onChange={handleChange}
-                        className={`w-full pl-10 pr-12 py-3 border rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-300 ${
-                          errors.password ? 'border-red-500' : 'border-gray-300 hover:border-gray-400'
+                        className={`w-full pl-10 pr-10 py-2.5 text-sm border rounded-lg focus:ring-2 focus:ring-[#52dd28ff]/20 focus:border-[#52dd28ff] ${
+                          errors.password ? 'border-red-500' : 'border-gray-300'
                         }`}
-                        placeholder="Enter your password"
+                        placeholder="Min 6 characters"
                       />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                      <button 
+                        type="button" 
+                        onClick={() => setShowPassword(!showPassword)} 
+                        className="absolute right-3 top-1/2 -translate-y-1/2"
                       >
-                        {showPassword ? (
-                          <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-900 transition-colors" />
-                        ) : (
-                          <Eye className="h-5 w-5 text-gray-400 hover:text-gray-900 transition-colors" />
-                        )}
+                        {showPassword ? 
+                          <EyeOff className="w-4 h-4 text-gray-400" /> : 
+                          <Eye className="w-4 h-4 text-gray-400" />
+                        }
                       </button>
                     </div>
-                    {errors.password && <p className="mt-1 text-sm text-red-500">{errors.password}</p>}
+                    {errors.password && <p className="text-xs text-red-500 mt-1">{errors.password}</p>}
                   </div>
+
+
+                                  {/* Admin Toggle - Only show for login, not for registration */}
+                {isLogin && (
+                  <div className="mb-6 flex items-center justify-between p-2 sm:p-3 ml-6 bg-gray-50 rounded-box-lg border border-gray-200 w-55">
+                    <div className="flex items-center gap-2">
+                      <Shield className="w-4 h-4 text-[#52dd28ff]" />
+                      <span className="text-xs sm:text-sm font-medium text-gray-700">Admin Login</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setIsAdmin(!isAdmin)}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#52dd28ff] focus:ring-offset-2 ${
+                        isAdmin ? 'bg-[#52dd28ff]' : 'bg-gray-300'
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded- bg-white transition-transform ${
+                          isAdmin ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
+                  </div>
+                )}
 
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full bg-primary hover:bg-primary-dark text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md"
+                    className="w-full py-2.5 bg-[#52dd28ff] text-white rounded-lg text-xs sm:text-sm font-medium flex items-center justify-center gap-2 hover:bg-[#45b824] transition-colors disabled:opacity-50"
                   >
                     {isLoading ? (
-                      <>
-                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                        Processing...
-                      </>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                     ) : (
                       <>
-                        {isLogin ? 'Sign In' : 'Create Account'}
-                        <ArrowRight className="w-5 h-5" />
+                        {isLogin ? 'Log In' : 'Create Account'}
+                        <ArrowRight className="w-4 h-4" />
                       </>
                     )}
                   </button>
 
-                  <div className="relative my-6">
+                  <div className="relative my-4">
                     <div className="absolute inset-0 flex items-center">
                       <div className="w-full border-t border-gray-300"></div>
                     </div>
-                    <div className="relative flex justify-center text-sm">
-                      <span className="px-2 bg-white text-gray-500">Or continue with</span>
+                    <div className="relative flex justify-center text-xs">
+                      <span className="px-2 bg-white text-gray-500">Or</span>
                     </div>
                   </div>
 
@@ -1061,24 +1032,20 @@ function AuthForm() {
                     type="button"
                     onClick={handleGoogleSignIn}
                     disabled={isLoading}
-                    className="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 text-gray-700 font-medium py-3 px-4 rounded-lg hover:bg-gray-50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow"
+                    className="w-full flex items-center justify-center gap-2 bg-white border border-gray-300 text-gray-700 font-medium py-2.5 rounded-lg text-xs sm:text-sm hover:bg-gray-50 transition-colors disabled:opacity-50"
                   >
-                    {isLoading ? (
-                      <>
-                        <div className="w-5 h-5 border-2 border-gray-300 border-t-transparent rounded-full animate-spin"></div>
-                        Processing...
-                      </>
-                    ) : (
-                      <>
-                        <Chrome className="w-5 h-5" />
-                        {isLogin ? 'Sign in with Google' : 'Sign up with Google'}
-                      </>
-                    )}
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" className="w-5 h-5">
+                      <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z" />
+                      <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z" />
+                      <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z" />
+                      <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z" />
+                    </svg>
+                    {isLogin ? 'Sign in with Google' : 'Sign up with Google'}
                   </button>
                 </form>
 
-                <div className="mt-6 text-center">
-                  <p className="text-gray-600">
+                <div className="mt-4 text-center">
+                  <p className="text-xs sm:text-sm text-gray-600">
                     {isLogin ? "Don't have an account?" : "Already have an account?"}
                     <button
                       type="button"
@@ -1086,27 +1053,18 @@ function AuthForm() {
                         setIsLogin(!isLogin);
                         setFormData({ name: '', email: '', password: '' });
                         setErrors({});
+                        setIsAdmin(false); // Reset admin toggle when switching modes
                       }}
-                      className="ml-1 text-primary hover:text-primary-dark font-medium"
+                      className="ml-1 text-[#52dd28ff] font-medium hover:underline"
                     >
-                      {isLogin ? 'Sign Up' : 'Sign In'}
+                      {isLogin ? 'Sign Up' : 'Log In'}
                     </button>
                   </p>
-                </div>
-
-                <div className="mt-6 text-center">
-                  <Link 
-                    href="/" 
-                    className="text-gray-600 hover:text-primary transition-colors text-sm"
-                  >
-                    ← Back to Home
-                  </Link>
                 </div>
               </motion.div>
             </div>
           </div>
         </div>
-
       </div>
     </div>
   );
@@ -1117,12 +1075,13 @@ export default function AccountPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen bg-white">
+      <div className="min-h-screen bg-white">
         <Sidebar />
-        <div className="flex-1 lg:ml-0">
-          <div className="h-16 lg:hidden"></div>
-          <div className="flex items-center justify-center min-h-[60vh]">
-            <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+        <MobileNav />
+        <div className="lg:ml-[280px] flex flex-col min-h-screen">
+          <div className="h-14 lg:hidden"></div>
+          <div className="flex-1 flex items-center justify-center">
+            <div className="w-6 h-6 sm:w-8 sm:h-8 border-3 border-[#52dd28ff] border-t-transparent rounded-full animate-spin"></div>
           </div>
         </div>
       </div>

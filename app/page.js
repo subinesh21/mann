@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Sidebar from '@/components/sections/Sidebar';
+import MobileNav from '@/components/MobileNav';
 import CategoryGrid from '@/components/sections/CategoryGrid';
 import Footer from '@/components/sections/Footer';
 import ScrollToTop from '@/components/ScrollToTop';
@@ -34,15 +35,17 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-white">
       <Sidebar />
+      <MobileNav />
       
-      <div className="main-content-wrapper">
-        <div className="h-14 lg:hidden">
-        </div>
+      <div className="lg:ml-[280px] flex flex-col min-h-screen">
+        <div className="h-14 lg:hidden"></div>
         
         <CategoryGrid />
         
         <Footer />
       </div>
+      
+      <ScrollToTop visible={showScrollTop} />
     </div>
   );
 }

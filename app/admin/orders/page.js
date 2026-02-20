@@ -6,7 +6,6 @@ import {
   ShoppingCart, 
   Search, 
   Filter, 
-  Eye, 
   Package, 
   Truck, 
   CheckCircle, 
@@ -87,7 +86,6 @@ export default function AdminOrdersPage() {
       const data = await response.json();
       
       if (response.ok) {
-        // Update local state
         setOrders(prev => prev.map(order => 
           order.id === orderId ? { ...order, status: newStatus } : order
         ));
@@ -118,8 +116,6 @@ export default function AdminOrdersPage() {
       day: 'numeric',
       month: 'short',
       year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
     });
   };
 
@@ -130,56 +126,48 @@ export default function AdminOrdersPage() {
 
   return (
     <AdminLayout>
-      <div className="space-y-8">
+      <div className="space-y-3 sm:space-y-4">
         {/* Header */}
         <motion.div 
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6"
+          className="flex items-center justify-between"
         >
           <div>
-            <h1 className="text-3xl font-bold text-amado-dark mb-2">Order Management</h1>
-            <p className="text-amado-muted">
-              Manage and track all customer orders efficiently
-            </p>
+            <h1 className="text-base sm:text-lg font-bold text-gray-900">Orders</h1>
+            <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5">Manage customer orders</p>
           </div>
-          <div className="flex items-center gap-3 text-sm text-amado-muted bg-white px-4 py-2 rounded-lg border border-amado-border">
-            <div className="p-2 bg-amado-yellow/10 rounded-circle">
-              <ShoppingCart className="w-5 h-5 text-amado-yellow" />
-            </div>
-            <div>
-              <span className="block font-semibold text-amado-dark">{orders.length}</span>
-              <span className="block">Total Orders</span>
-            </div>
+          <div className="flex items-center gap-1 text-[10px] sm:text-xs bg-white px-2 py-1 rounded border border-gray-200">
+            <ShoppingCart className="w-3 h-3 text-[#52dd28ff]" />
+            <span className="font-medium text-gray-900">{orders.length}</span>
           </div>
         </motion.div>
 
         {/* Filters */}
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="flex flex-col sm:flex-row gap-4 bg-white p-5 rounded-lg border border-amado-border shadow-sm"
+          className="flex flex-col gap-2"
         >
           {/* Search */}
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-amado-gray w-5 h-5" />
+            <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 w-3 h-3 sm:w-4 sm:h-4" />
             <input
               type="text"
-              placeholder="Search by order #, customer name, email, or phone..."
+              placeholder="Search orders..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border border-amado-border rounded-lg focus:ring-2 focus:ring-amado-yellow focus:border-amado-yellow transition-all duration-300 bg-amado-light placeholder:text-amado-muted"
+              className="w-full pl-7 sm:pl-8 pr-3 py-2 text-xs border border-gray-200 rounded-lg focus:ring-1 focus:ring-[#52dd28ff] focus:border-[#52dd28ff] bg-white"
             />
           </div>
           
           {/* Status Filter */}
-          <div className="relative min-w-[180px]">
-            <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-amado-gray w-5 h-5" />
+          <div className="relative">
+            <Filter className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 w-3 h-3 sm:w-4 sm:h-4" />
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="w-full pl-10 pr-8 py-3 border border-amado-border rounded-lg focus:ring-2 focus:ring-amado-yellow focus:border-amado-yellow appearance-none bg-white transition-all duration-300 text-amado-dark font-medium"
+              className="w-full pl-7 sm:pl-8 pr-6 py-2 text-xs border border-gray-200 rounded-lg focus:ring-1 focus:ring-[#52dd28ff] focus:border-[#52dd28ff] appearance-none bg-white"
             >
               <option value="all">All Status</option>
               <option value="pending">Pending</option>
@@ -188,7 +176,7 @@ export default function AdminOrdersPage() {
               <option value="delivered">Delivered</option>
               <option value="cancelled">Cancelled</option>
             </select>
-            <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-amado-gray w-4 h-4 pointer-events-none" />
+            <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 w-3 h-3" />
           </div>
         </motion.div>
 
@@ -196,10 +184,10 @@ export default function AdminOrdersPage() {
         <AnimatePresence>
           {error && (
             <motion.div 
-              initial={{ opacity: 0, y: -10 }}
+              initial={{ opacity: 0, y: -5 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700"
+              exit={{ opacity: 0, y: -5 }}
+              className="bg-red-50 border border-red-200 rounded-lg p-2 text-xs text-red-700"
             >
               {error}
             </motion.div>
@@ -207,30 +195,18 @@ export default function AdminOrdersPage() {
         </AnimatePresence>
 
         {/* Orders List */}
-        <div className="bg-white rounded-lg border border-amado-border overflow-hidden">
-          <div className="px-5 py-4 border-b border-amado-border bg-amado-light">
-            <h3 className="text-lg font-semibold text-amado-dark">Order History</h3>
-          </div>
-
+        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
           {loading ? (
-            <div className="flex items-center justify-center py-16">
-              <div className="text-center">
-                <div className="w-12 h-12 border-4 border-amado-yellow border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                <p className="text-amado-muted">Loading orders...</p>
-              </div>
+            <div className="flex items-center justify-center py-8">
+              <div className="w-6 h-6 border-2 border-[#52dd28ff] border-t-transparent rounded-full animate-spin"></div>
             </div>
           ) : filteredOrders.length === 0 ? (
-            <div className="text-center py-16">
-              <div className="p-8">
-                <Package className="w-16 h-16 text-amado-gray mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-amado-dark mb-2">No orders found</h3>
-                <p className="text-amado-muted max-w-md mx-auto">
-                  {searchTerm ? 'Try adjusting your search or filters' : 'Orders will appear here when customers place them'}
-                </p>
-              </div>
+            <div className="text-center py-8">
+              <Package className="w-8 h-8 text-gray-300 mx-auto mb-2" />
+              <p className="text-xs text-gray-500">No orders found</p>
             </div>
           ) : (
-            <div className="divide-y divide-amado-border">
+            <div className="divide-y divide-gray-100">
               {filteredOrders.map((order, index) => {
                 const status = statusConfig[order.status];
                 const StatusIcon = status.icon;
@@ -239,202 +215,121 @@ export default function AdminOrdersPage() {
                 return (
                   <motion.div
                     key={order.id}
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 5 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: index * 0.05 }}
-                    className="hover:bg-amado-light transition-colors duration-200"
+                    transition={{ duration: 0.2, delay: index * 0.03 }}
+                    className="hover:bg-gray-50 transition-colors"
                   >
                     {/* Order Header */}
                     <div 
-                      className="p-5 cursor-pointer"
+                      className="p-3 cursor-pointer"
                       onClick={() => setExpandedOrder(isExpanded ? null : order.id)}
                     >
-                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                        {/* Order Info */}
-                        <div className="flex items-start gap-4">
-                          <div className="w-12 h-12 bg-amado-yellow/10 rounded-circle flex items-center justify-center flex-shrink-0">
-                            <Package className="w-6 h-6 text-amado-yellow" />
-                          </div>
-                          <div className="flex-1">
-                            <div className="flex items-center gap-3 flex-wrap mb-2">
-                              <h3 className="font-bold text-amado-dark text-lg">
-                                Order #{order.orderNumber}
-                              </h3>
-                              <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${status.color}`}>
-                                <StatusIcon className="w-3 h-3 mr-1" />
-                                {status.label}
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-5 flex-wrap text-sm text-amado-muted">
-                              <span className="flex items-center gap-1">
-                                <Calendar className="w-4 h-4" />
-                                {formatDate(order.createdAt)}
-                              </span>
-                              <span className="flex items-center gap-1">
-                                <User className="w-4 h-4" />
-                                {order.user?.name}
-                              </span>
-                              <span className="flex items-center gap-1">
-                                <Mail className="w-4 h-4" />
-                                {order.user?.email}
-                              </span>
-                            </div>
-                          </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 bg-[#52dd28ff]/10 rounded-full flex items-center justify-center flex-shrink-0">
+                          <Package className="w-4 h-4 text-[#52dd28ff]" />
                         </div>
-
-                        {/* Order Summary */}
-                        <div className="flex items-center gap-4">
-                          <div className="text-right">
-                            <p className="font-bold text-amado-dark text-lg flex items-center gap-1">
-                              <IndianRupee className="w-4 h-4" />
-                              {order.totalAmount?.toFixed(2)}
-                            </p>
-                            <p className="text-sm text-amado-muted">
-                              {getTotalItems(order.items)} items
-                            </p>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-0.5">
+                            <h3 className="text-xs font-semibold text-gray-900 truncate">
+                              #{order.orderNumber}
+                            </h3>
+                            <span className={`inline-flex items-center px-1.5 py-0.5 rounded-full text-[8px] font-medium ${status.color}`}>
+                              <StatusIcon className="w-2 h-2 mr-0.5" />
+                              {status.label}
+                            </span>
                           </div>
-                          <button className="p-2 hover:bg-amado-yellow/10 rounded-circle transition-colors duration-300">
-                            {isExpanded ? (
-                              <ChevronUp className="w-5 h-5 text-amado-gray" />
-                            ) : (
-                              <ChevronDown className="w-5 h-5 text-amado-gray" />
-                            )}
-                          </button>
+                          <p className="text-[10px] text-gray-500 truncate">{order.user?.name}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-xs font-bold text-gray-900 flex items-center gap-0.5">
+                            <IndianRupee className="w-2 h-2" />
+                            {order.totalAmount}
+                          </p>
+                          <ChevronDown className="w-3 h-3 text-gray-400 ml-auto" />
                         </div>
                       </div>
                     </div>
 
-                    {/* Expanded Order Details */}
+                    {/* Expanded Details */}
                     <AnimatePresence>
                       {isExpanded && (
                         <motion.div
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: 'auto', opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
-                          className="border-t border-amado-border bg-white"
+                          className="border-t border-gray-100 bg-gray-50"
                         >
-                          <div className="p-5 space-y-6">
-                            {/* Customer & Shipping Info */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                              {/* Customer Details */}
-                              <div className="bg-amado-light rounded-lg p-5 border border-amado-border">
-                                <h4 className="font-semibold text-amado-dark mb-4 flex items-center gap-2">
-                                  <User className="w-5 h-5 text-amado-yellow" />
-                                  Customer Details
+                          <div className="p-3 space-y-3">
+                            {/* Customer & Shipping */}
+                            <div className="grid grid-cols-1 gap-2">
+                              <div className="bg-white p-2 rounded border border-gray-200">
+                                <h4 className="text-[10px] font-semibold text-gray-900 mb-2 flex items-center gap-1">
+                                  <User className="w-3 h-3 text-[#52dd28ff]" />
+                                  Customer
                                 </h4>
-                                <div className="space-y-3 text-sm">
-                                  <div>
-                                    <p className="text-amado-dark font-semibold text-base">{order.user?.name}</p>
-                                    <p className="text-amado-muted">Full Name</p>
-                                  </div>
-                                  <div>
-                                    <p className="text-amado-dark font-medium flex items-center gap-2">
-                                      <Mail className="w-4 h-4 text-amado-gray" />
-                                      {order.user?.email}
-                                    </p>
-                                    <p className="text-amado-muted">Email Address</p>
-                                  </div>
-                                  <div>
-                                    <p className="text-amado-dark font-medium flex items-center gap-2">
-                                      <Phone className="w-4 h-4 text-amado-gray" />
-                                      {order.shippingAddress?.phone}
-                                    </p>
-                                    <p className="text-amado-muted">Phone Number</p>
-                                  </div>
-                                </div>
+                                <p className="text-[10px] font-medium text-gray-900">{order.user?.name}</p>
+                                <p className="text-[8px] text-gray-500 flex items-center gap-1 mt-1">
+                                  <Mail className="w-2 h-2" />
+                                  {order.user?.email}
+                                </p>
+                                <p className="text-[8px] text-gray-500 flex items-center gap-1">
+                                  <Phone className="w-2 h-2" />
+                                  {order.shippingAddress?.phone}
+                                </p>
                               </div>
 
-                              {/* Shipping Address */}
-                              <div className="bg-amado-light rounded-lg p-5 border border-amado-border">
-                                <h4 className="font-semibold text-amado-dark mb-4 flex items-center gap-2">
-                                  <MapPin className="w-5 h-5 text-amado-yellow" />
-                                  Shipping Address
+                              <div className="bg-white p-2 rounded border border-gray-200">
+                                <h4 className="text-[10px] font-semibold text-gray-900 mb-2 flex items-center gap-1">
+                                  <MapPin className="w-3 h-3 text-[#52dd28ff]" />
+                                  Shipping
                                 </h4>
-                                <div className="space-y-2 text-sm text-amado-dark">
-                                  <p className="font-semibold text-base">{order.shippingAddress?.fullName}</p>
-                                  <p className="text-amado-muted">{order.shippingAddress?.address}</p>
-                                  <p className="text-amado-muted">{order.shippingAddress?.city}, {order.shippingAddress?.state} - {order.shippingAddress?.zipCode}</p>
-                                  <p className="text-amado-muted">{order.shippingAddress?.country}</p>
-                                </div>
+                                <p className="text-[8px] text-gray-600">{order.shippingAddress?.fullName}</p>
+                                <p className="text-[8px] text-gray-500">{order.shippingAddress?.address}</p>
+                                <p className="text-[8px] text-gray-500">{order.shippingAddress?.city}, {order.shippingAddress?.state}</p>
+                                <p className="text-[8px] text-gray-500">{order.shippingAddress?.zipCode}</p>
                               </div>
                             </div>
 
                             {/* Order Items */}
-                            <div>
-                              <h4 className="font-semibold text-amado-dark mb-4 text-lg">Order Items</h4>
-                              <div className="space-y-4">
-                                {order.items?.map((item, index) => (
-                                  <div key={index} className="flex items-center gap-4 p-4 bg-amado-light rounded-lg border border-amado-border">
+                            <div className="bg-white p-2 rounded border border-gray-200">
+                              <h4 className="text-[10px] font-semibold text-gray-900 mb-2">Items ({getTotalItems(order.items)})</h4>
+                              <div className="space-y-2">
+                                {order.items?.map((item, idx) => (
+                                  <div key={idx} className="flex items-center gap-2">
                                     <img 
                                       src={item.image} 
                                       alt={item.name}
-                                      className="w-16 h-16 object-cover rounded-lg border border-amado-border"
+                                      className="w-6 h-6 object-cover rounded"
                                     />
-                                    <div className="flex-1">
-                                      <h5 className="font-semibold text-amado-dark">{item.name}</h5>
-                                      {item.color && (
-                                        <p className="text-sm text-amado-muted mt-1">Color: {item.color}</p>
-                                      )}
-                                      <p className="text-sm text-amado-muted">Quantity: {item.quantity}</p>
+                                    <div className="flex-1 min-w-0">
+                                      <p className="text-[8px] font-medium text-gray-900 truncate">{item.name}</p>
+                                      <p className="text-[7px] text-gray-500">Qty: {item.quantity}</p>
                                     </div>
-                                    <div className="text-right">
-                                      <p className="font-bold text-amado-dark text-lg flex items-center gap-1">
-                                        <IndianRupee className="w-4 h-4" />
-                                        {(item.price * item.quantity).toFixed(2)}
-                                      </p>
-                                      <p className="text-sm text-amado-muted">
-                                        <IndianRupee className="w-3 h-3 inline" />
-                                        {item.price.toFixed(2)} each
-                                      </p>
-                                    </div>
+                                    <p className="text-[8px] font-medium text-gray-900">
+                                      ₹{item.price * item.quantity}
+                                    </p>
                                   </div>
                                 ))}
                               </div>
                             </div>
 
-                            {/* Order Total & Actions */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-amado-border">
-                              <div>
-                                <p className="text-sm text-amado-muted mb-1">Payment Method</p>
-                                <p className="font-semibold text-amado-dark text-lg">
-                                  {order.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online Payment'}
-                                </p>
-                              </div>
-                              <div className="text-right">
-                                <p className="text-sm text-amado-muted mb-1">Total Amount</p>
-                                <p className="text-2xl font-bold text-amado-dark flex items-center gap-1 justify-end">
-                                  <IndianRupee className="w-6 h-6" />
-                                  {order.totalAmount?.toFixed(2)}
-                                </p>
-                              </div>
-                            </div>
-
                             {/* Status Update */}
-                            <div className="flex flex-col sm:flex-row sm:items-center gap-4 pt-6 border-t border-amado-border">
-                              <span className="text-sm font-semibold text-amado-dark">Update Status:</span>
-                              <div className="flex flex-wrap gap-2">
-                                {Object.entries(statusConfig).map(([key, config]) => (
-                                  <button
-                                    key={key}
-                                    onClick={() => updateOrderStatus(order.id, key)}
-                                    disabled={updatingStatus === order.id || order.status === key}
-                                    className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${
-                                      order.status === key
-                                        ? `${config.color} border border-current`
-                                        : 'bg-amado-light text-amado-dark hover:bg-amado-yellow/10 hover:text-amado-yellow border border-amado-border hover:border-amado-yellow'
-                                    } disabled:opacity-50 disabled:cursor-not-allowed`}
-                                  >
-                                    {updatingStatus === order.id ? (
-                                      <span className="flex items-center gap-2">
-                                        <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                                        Updating...
-                                      </span>
-                                    ) : (
-                                      config.label
-                                    )}
-                                  </button>
-                                ))}
-                              </div>
+                            <div className="flex flex-wrap gap-1">
+                              {Object.entries(statusConfig).map(([key, config]) => (
+                                <button
+                                  key={key}
+                                  onClick={() => updateOrderStatus(order.id, key)}
+                                  disabled={updatingStatus === order.id || order.status === key}
+                                  className={`px-2 py-1 rounded text-[8px] font-medium ${
+                                    order.status === key
+                                      ? config.color
+                                      : 'bg-white border border-gray-200 text-gray-600'
+                                  } disabled:opacity-50`}
+                                >
+                                  {updatingStatus === order.id ? '...' : config.label}
+                                </button>
+                              ))}
                             </div>
                           </div>
                         </motion.div>
