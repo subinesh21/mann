@@ -2,6 +2,9 @@ import mongoose, { Mongoose } from 'mongoose';
 
 const MONGODB_URI = process.env.MONGODB_URI || '';
 
+console.log('Environment MONGODB_URI:', MONGODB_URI ? 'SET' : 'NOT SET');
+console.log('Full URI value:', MONGODB_URI);
+
 if (!MONGODB_URI) {
   console.warn('MONGODB_URI is not set. MongoDB features will be disabled.');
 }

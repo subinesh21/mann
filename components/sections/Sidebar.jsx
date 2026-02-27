@@ -90,7 +90,7 @@ export default function Sidebar() {
           <a href="/" className="text-3xl font-bold text-[#131212]">
             <span className="text-[#52dd28ff]">MAnn</span>
           </a>
-          <p className="text-xs text-[#6b6b6b] mt-1 tracking-[3px]">SUSTAINABLE</p>
+          <p className="text-xs text-[#6b6b6b] mt-1 tracking-[3px]">SUSTAINABLE LIVING</p>
         </div>
 
         {/* Navigation - Increased bottom margin */}

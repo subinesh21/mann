@@ -17,8 +17,11 @@ const userSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    required: true,
-    unique: true,
+    sparse: true, // Allow null values for mobile-only users
+  },
+  mobile: {
+    type: String,
+    sparse: true, // Allow null values for email-only users
   },
   password: {
     type: String,
@@ -26,7 +29,6 @@ const userSchema = new mongoose.Schema({
   },
   googleId: {
     type: String,
-    unique: true,
     sparse: true, // Allow null values
   },
   role: {
@@ -61,9 +63,23 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
+  otp: {
+    type: String,
+    select: false,
+  },
+  otpExpires: {
+    type: Date,
+    select: false,
+  },
+  isVerified: {
+    type: Boolean,
+    default: false,
+  },
 }, {
   // Disable automatic _id generation since we're setting it manually
   _id: false,
+  // Disable auto indexing to prevent conflicts
+  autoIndex: false,
 });
 
 // Add comparePassword method

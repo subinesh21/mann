@@ -1,63 +1,86 @@
-import mongoose, { Document, Model, Schema } from 'mongoose';
+import mongoose from 'mongoose';
 
-export interface IProduct extends Document {
-  name: string;
-  description: string;
-  price: number;
-  category: string;
-  image: string;
-  stock: number;
-  isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-const ProductSchema = new Schema<IProduct>({
+const productSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'Product name is required'],
-    trim: true,
-    maxlength: [100, 'Product name cannot exceed 100 characters']
-  },
-  description: {
-    type: String,
-    required: [true, 'Product description is required'],
-    maxlength: [1000, 'Description cannot exceed 1000 characters']
+    required: true,
+    trim: true
   },
   price: {
     type: Number,
-    required: [true, 'Price is required'],
-    min: [0, 'Price cannot be negative']
+    required: true,
+    min: 0
+  },
+  originalPrice: {
+    type: Number,
+    min: 0
+  },
+  primaryImage: {
+    type: String,
+    required: true
+  },
+  hoverImage: {
+    type: String
+  },
+  images: {
+    type: Map,
+    of: [String], // Color -> [image URLs]
+    default: {}
   },
   category: {
     type: String,
-    required: [true, 'Category is required'],
-    enum: ['drinkware', 'tableware', 'storage', 'gardenware', 'one', 'two', 'three'],
-    trim: true
+    required: true,
+    enum: ['drinkware', 'tableware', 'storage', 'kitchenware', 'homeware', 'bakeware', 'gardenware', 'gifting']
   },
-  image: {
+  brand: {
     type: String,
-    required: [true, 'Image URL is required']
+    required: true
   },
-  stock: {
+  colors: [{
+    type: String
+  }],
+  inStock: {
+    type: Boolean,
+    default: true
+  },
+  description: {
+    type: String,
+    required: true
+  },
+  rating: {
     type: Number,
-    required: [true, 'Stock quantity is required'],
-    min: [0, 'Stock cannot be negative'],
+    min: 0,
+    max: 5,
+    default: 0
+  },
+  reviews: {
+    type: Number,
     default: 0
   },
   isActive: {
     type: Boolean,
-    default: true
+    default: true // For hiding/unhiding products
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now
   }
-}, {
-  timestamps: true
+});
+
+// Update timestamps
+productSchema.pre('save', function(next) {
+  this.updatedAt = Date.now();
+  next();
 });
 
 // Index for better query performance
-ProductSchema.index({ category: 1 });
-ProductSchema.index({ name: 'text', description: 'text' });
-ProductSchema.index({ isActive: 1 });
+productSchema.index({ category: 1, brand: 1 });
+productSchema.index({ name: 'text', description: 'text' });
 
-const ProductModel: Model<IProduct> = (mongoose.models.Product as Model<IProduct>) || 
-  mongoose.model<IProduct, Model<IProduct>>('Product', ProductSchema);
+const ProductModel = mongoose.models.Product || mongoose.model('Product', productSchema);
+
 export default ProductModel;

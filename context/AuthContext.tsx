@@ -10,7 +10,6 @@ interface AuthContextType {
   loading: boolean;
   isAuthenticated: boolean;
   login: (email: string, password: string, loginAs?: string) => Promise<any>;
-  register: (name: string, email: string, password: string) => Promise<any>;
   logout: () => Promise<void>;
 }
 
@@ -100,35 +99,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const register = async (name: string, email: string, password: string) => {
-    try {
-      setLoading(true);
-      
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password }),
-      });
-      
-      const data = await response.json();
-      
-      if (response.ok) {
-        toast.success('Registration successful!');
-        router.push('/account');
-        return data.user;
-      } else {
-        toast.error(data.message || 'Registration failed');
-        throw new Error(data.message);
-      }
-    } catch (error) {
-      console.error('Registration error:', error);
-      toast.error(error instanceof Error ? error.message : 'Registration failed');
-      throw error;
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const logout = async () => {
     try {
       setLoading(true);
@@ -163,7 +133,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       loading,
       isAuthenticated,
       login,
-      register,
       logout,
     }}>
       {children}

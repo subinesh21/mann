@@ -773,21 +773,47 @@ function AuthForm() {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [authMethod, setAuthMethod] = useState('email'); // 'email' or 'mobile'
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    mobile: '',
     password: '',
   });
   const [errors, setErrors] = useState({});
-  const { login, register, isLoading } = useAuth();
+  const [otpStep, setOtpStep] = useState(false); // For registration OTP
+  const [forgotPasswordStep, setForgotPasswordStep] = useState(false); // For password reset
+  const [otpData, setOtpData] = useState({ userId: '', email: '', mobile: '' }); // Store user data during OTP process
+  const [otp, setOtp] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [countdown, setCountdown] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const { login } = useAuth();
+
+  // Countdown timer effect
+  useEffect(() => {
+    if (countdown > 0) {
+      const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [countdown]);
 
   const validateForm = () => {
     const newErrors = {};
     
-    if (!formData.email) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
+    if (authMethod === 'email') {
+      if (!formData.email) {
+        newErrors.email = 'Email is required';
+      } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+        newErrors.email = 'Email is invalid';
+      }
+    } else {
+      if (!formData.mobile) {
+        newErrors.mobile = 'Mobile number is required';
+      } else if (!/^(\+91|91)?[6-9]\d{9}$/.test(formData.mobile)) {
+        newErrors.mobile = 'Please enter a valid Indian mobile number';
+      }
     }
     
     if (!formData.password) {
@@ -804,6 +830,325 @@ function AuthForm() {
     return Object.keys(newErrors).length === 0;
   };
 
+  const validateOTP = () => {
+    const newErrors = {};
+    
+    if (!otp || otp.length !== 6) {
+      newErrors.otp = 'Please enter a valid 6-digit OTP';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const validateResetPassword = () => {
+    const newErrors = {};
+    
+    if (!newPassword) {
+      newErrors.newPassword = 'New password is required';
+    } else if (newPassword.length < 6) {
+      newErrors.newPassword = 'Password must be at least 6 characters';
+    }
+    
+    if (!confirmPassword) {
+      newErrors.confirmPassword = 'Please confirm your password';
+    } else if (newPassword !== confirmPassword) {
+      newErrors.confirmPassword = 'Passwords do not match';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSendOTP = async (e) => {
+    e.preventDefault();
+    
+    if (!validateForm()) return;
+    
+    try {
+      setIsLoading(true);
+      setErrors({});
+      
+      if (authMethod === 'email') {
+        // Existing email OTP flow
+        const response = await fetch('/api/auth/send-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: formData.name,
+            email: formData.email,
+            password: formData.password
+          }),
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          setOtpData({ userId: data.userId, email: data.email, mobile: '' });
+          setOtpStep(true);
+          setCountdown(600); // 10 minutes
+          toast.success('OTP sent to your email!');
+        } else {
+          toast.error(data.message || 'Failed to send OTP');
+          setErrors({ general: data.message });
+        }
+      } else {
+        // New mobile OTP flow
+        const response = await fetch('/api/auth/mobile/send-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            mobile: formData.mobile.startsWith('+91') ? formData.mobile : '+91' + formData.mobile
+          }),
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          setOtpData({ userId: '', email: '', mobile: formData.mobile });
+          setOtpStep(true);
+          setCountdown(600); // 10 minutes
+          toast.success('OTP sent to your mobile!');
+        } else {
+          toast.error(data.message || 'Failed to send OTP');
+          setErrors({ general: data.message });
+        }
+      }
+    } catch (error) {
+      console.error('Send OTP error:', error);
+      toast.error('Network error. Please try again.');
+      setErrors({ general: 'Network error. Please try again.' });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleVerifyOTP = async (e) => {
+    e.preventDefault();
+    
+    if (!validateOTP()) return;
+    
+    try {
+      setIsLoading(true);
+      setErrors({});
+      
+      if (authMethod === 'email') {
+        // Existing email OTP verification
+        const response = await fetch('/api/auth/verify-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId: otpData.userId,
+            otp: otp
+          }),
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          toast.success('Account created successfully!');
+          // User is automatically logged in after verification
+          window.location.reload();
+        } else {
+          toast.error(data.message || 'Invalid OTP');
+          setErrors({ otp: data.message });
+        }
+      } else {
+        // New mobile OTP verification
+        const mobileNumber = otpData.mobile.startsWith('+91') ? otpData.mobile : '+91' + otpData.mobile;
+        
+        const response = await fetch('/api/auth/mobile/verify-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            mobile: mobileNumber,
+            otp: otp,
+            name: formData.name,
+            password: formData.password
+          }),
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          toast.success(data.message || 'Login successful!');
+          // User is automatically logged in after verification
+          window.location.reload();
+        } else {
+          toast.error(data.message || 'Invalid OTP');
+          setErrors({ otp: data.message });
+        }
+      }
+    } catch (error) {
+      console.error('Verify OTP error:', error);
+      toast.error('Network error. Please try again.');
+      setErrors({ otp: 'Network error. Please try again.' });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleResendOTP = async () => {
+    if (countdown > 0) {
+      toast.info(`Please wait ${Math.ceil(countdown / 60)} minutes before resending`);
+      return;
+    }
+    
+    try {
+      setIsLoading(true);
+      
+      const response = await fetch('/api/auth/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password
+        }),
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        setCountdown(600); // Reset countdown
+        toast.success('OTP resent successfully!');
+      } else {
+        toast.error(data.message || 'Failed to resend OTP');
+      }
+    } catch (error) {
+      console.error('Resend OTP error:', error);
+      toast.error('Network error. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    
+    try {
+      setIsLoading(true);
+      setErrors({});
+      
+      if (authMethod === 'email') {
+        if (!formData.email) {
+          setErrors({ email: 'Email is required' });
+          setIsLoading(false);
+          return;
+        }
+        
+        const response = await fetch('/api/auth/forgot-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: formData.email }),
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          setForgotPasswordStep(true);
+          setOtpData({ userId: data.userId, email: formData.email, mobile: '' });
+          setCountdown(600); // 10 minutes
+          toast.success('Password reset OTP sent to your email!');
+        } else {
+          toast.error(data.message || 'Failed to send reset OTP');
+        }
+      } else {
+        // Mobile password reset
+        if (!formData.mobile) {
+          setErrors({ mobile: 'Mobile number is required' });
+          setIsLoading(false);
+          return;
+        }
+        
+        const mobileNumber = formData.mobile.startsWith('+91') ? formData.mobile : '+91' + formData.mobile;
+        
+        const response = await fetch('/api/auth/mobile/reset-password/otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ mobile: mobileNumber }),
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          setForgotPasswordStep(true);
+          setOtpData({ userId: '', email: '', mobile: formData.mobile });
+          setCountdown(600); // 10 minutes
+          toast.success('Password reset OTP sent to your mobile!');
+        } else {
+          toast.error(data.message || 'Failed to send reset OTP');
+        }
+      }
+    } catch (error) {
+      console.error('Forgot password error:', error);
+      toast.error('Network error. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+    
+    if (!validateResetPassword()) return;
+    
+    try {
+      setIsLoading(true);
+      setErrors({});
+      
+      let response;
+      
+      if (authMethod === 'email') {
+        response = await fetch('/api/auth/reset-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId: otpData.userId,
+            otp: otp,
+            newPassword: newPassword
+          }),
+        });
+      } else {
+        // Mobile password reset
+        const mobileNumber = otpData.mobile.startsWith('+91') ? otpData.mobile : '+91' + otpData.mobile;
+        response = await fetch('/api/auth/mobile/reset-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            mobile: mobileNumber,
+            otp: otp,
+            newPassword: newPassword
+          }),
+        });
+      }
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        toast.success('Password reset successfully!');
+        // Reset form and go back to login
+        setForgotPasswordStep(false);
+        setOtpStep(false);
+        setIsLogin(true);
+        setFormData({ name: '', email: '', mobile: '', password: '' });
+        setOtp('');
+        setNewPassword('');
+        setConfirmPassword('');
+        setErrors({});
+      } else {
+        toast.error(data.message || 'Failed to reset password');
+        setErrors({ general: data.message });
+      }
+    } catch (error) {
+      console.error('Reset password error:', error);
+      toast.error('Network error. Please try again.');
+      setErrors({ general: 'Network error. Please try again.' });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -814,7 +1159,8 @@ function AuthForm() {
     if (isLogin) {
       await login(formData.email, formData.password, loginAs);
     } else {
-      await register(formData.name, formData.email, formData.password);
+      // For registration, send OTP instead of direct registration
+      await handleSendOTP(e);
     }
   };
 
@@ -872,6 +1218,39 @@ function AuthForm() {
     }
   };
 
+  const handleMobileChange = (e) => {
+    // Allow only numbers and limit to 10 digits
+    const value = e.target.value.replace(/\D/g, '').slice(0, 10);
+    setFormData(prev => ({ ...prev, mobile: value }));
+    if (errors.mobile) {
+      setErrors(prev => ({ ...prev, mobile: '' }));
+    }
+  };
+
+  const handleOtpChange = (e) => {
+    const value = e.target.value.replace(/\D/g, '').slice(0, 6);
+    setOtp(value);
+    if (errors.otp) {
+      setErrors(prev => ({ ...prev, otp: '' }));
+    }
+  };
+
+  const handleNewPasswordChange = (e) => {
+    const { name, value } = e.target;
+    if (name === 'newPassword') setNewPassword(value);
+    if (name === 'confirmPassword') setConfirmPassword(value);
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
+  };
+
+  // Format countdown timer
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <Sidebar />
@@ -908,47 +1287,321 @@ function AuthForm() {
 
 
 
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  {!isLogin && (
+                {/* OTP Verification Form */}
+                {otpStep && (
+                  <form onSubmit={handleVerifyOTP} className="space-y-4">
+                    <div className="text-center mb-6">
+                      <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <Mail className="w-8 h-8 text-green-600" />
+                      </div>
+                      <h2 className="text-xl font-bold text-gray-900 mb-2">Verify Your {authMethod === 'email' ? 'Email' : 'Mobile'}</h2>
+                      <p className="text-gray-600">
+                        Enter the 6-digit code sent to <span className="font-medium">
+                          {authMethod === 'email' ? otpData.email : `+91${otpData.mobile}`}
+                        </span>
+                      </p>
+                    </div>
+                    
                     <div>
                       <label className="text-xs font-medium text-gray-700 mb-1 block uppercase tracking-wide">
-                        Full Name
+                        Verification Code
                       </label>
                       <div className="relative">
-                        <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                         <input
-                          name="name"
-                          value={formData.name}
-                          onChange={handleChange}
-                          className={`w-full pl-10 pr-3 py-2.5 text-sm border rounded-lg focus:ring-2 focus:ring-[#52dd28ff]/20 focus:border-[#52dd28ff] ${
-                            errors.name ? 'border-red-500' : 'border-gray-300'
+                          type="text"
+                          value={otp}
+                          onChange={handleOtpChange}
+                          className={`w-full px-4 py-3 text-lg text-center tracking-widest border rounded-lg focus:ring-2 focus:ring-[#52dd28ff]/20 focus:border-[#52dd28ff] ${
+                            errors.otp ? 'border-red-500' : 'border-gray-300'
                           }`}
-                          placeholder="Full name"
+                          placeholder="0 0 0 0 0 0"
+                          maxLength={6}
+                          autoFocus
                         />
                       </div>
-                      {errors.name && <p className="text-xs text-red-500 mt-1">{errors.name}</p>}
+                      {errors.otp && <p className="text-xs text-red-500 mt-1">{errors.otp}</p>}
                     </div>
-                  )}
+                    
+                    <div className="flex items-center justify-between text-sm">
+                      <button
+                        type="button"
+                        onClick={handleResendOTP}
+                        disabled={isLoading || countdown > 0}
+                        className="text-[#52dd28ff] hover:underline disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {countdown > 0 ? `Resend in ${formatTime(countdown)}` : 'Resend Code'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setOtpStep(false);
+                          setOtp('');
+                          setErrors({});
+                        }}
+                        className="text-gray-600 hover:text-gray-900"
+                      >
+                        Change Email
+                      </button>
+                    </div>
+                    
+                    <button
+                      type="submit"
+                      disabled={isLoading || otp.length !== 6}
+                      className="w-full py-3 bg-[#52dd28ff] text-white rounded-lg font-medium flex items-center justify-center gap-2 hover:bg-[#45b824] transition-colors disabled:opacity-50"
+                    >
+                      {isLoading ? (
+                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      ) : (
+                        <>
+                          Verify Account
+                          <ArrowRight className="w-5 h-5" />
+                        </>
+                      )}
+                    </button>
+                  </form>
+                )}
 
-                  <div>
-                    <label className="text-xs font-medium text-gray-700 mb-1 block uppercase tracking-wide">
-                      Email
-                    </label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                      <input
-                        name="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        className={`w-full pl-10 pr-3 py-2.5 text-sm border rounded-lg focus:ring-2 focus:ring-[#52dd28ff]/20 focus:border-[#52dd28ff] ${
-                          errors.email ? 'border-red-500' : 'border-gray-300'
-                        }`}
-                        placeholder="your@email.com"
-                      />
+                {/* Password Reset Form */}
+                {forgotPasswordStep && (
+                  <form onSubmit={handleResetPassword} className="space-y-4">
+                    <div className="text-center mb-6">
+                      <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <Lock className="w-8 h-8 text-blue-600" />
+                      </div>
+                      <h2 className="text-xl font-bold text-gray-900 mb-2">Reset Your Password</h2>
+                      <p className="text-gray-600">
+                        Enter the 6-digit code sent to <span className="font-medium">
+                          {authMethod === 'email' ? otpData.email : `+91${otpData.mobile}`}
+                        </span>
+                      </p>
                     </div>
-                    {errors.email && <p className="text-xs text-red-500 mt-1">{errors.email}</p>}
-                  </div>
+                    
+                    <div>
+                      <label className="text-xs font-medium text-gray-700 mb-1 block uppercase tracking-wide">
+                        Verification Code
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="text"
+                          value={otp}
+                          onChange={handleOtpChange}
+                          className={`w-full px-4 py-3 text-lg text-center tracking-widest border rounded-lg focus:ring-2 focus:ring-[#52dd28ff]/20 focus:border-[#52dd28ff] ${
+                            errors.otp ? 'border-red-500' : 'border-gray-300'
+                          }`}
+                          placeholder="0 0 0 0 0 0"
+                          maxLength={6}
+                          autoFocus
+                        />
+                      </div>
+                      {errors.otp && <p className="text-xs text-red-500 mt-1">{errors.otp}</p>}
+                    </div>
+                    
+                    <div>
+                      <label className="text-xs font-medium text-gray-700 mb-1 block uppercase tracking-wide">
+                        New Password
+                      </label>
+                      <div className="relative">
+                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                        <input
+                          name="newPassword"
+                          type={showPassword ? 'text' : 'password'}
+                          value={newPassword}
+                          onChange={handleNewPasswordChange}
+                          className={`w-full pl-10 pr-12 py-3 border rounded-lg focus:ring-2 focus:ring-[#52dd28ff]/20 focus:border-[#52dd28ff] ${
+                            errors.newPassword ? 'border-red-500' : 'border-gray-300'
+                          }`}
+                          placeholder="Enter new password"
+                        />
+                        <button 
+                          type="button" 
+                          onClick={() => setShowPassword(!showPassword)} 
+                          className="absolute right-3 top-1/2 -translate-y-1/2"
+                        >
+                          {showPassword ? 
+                            <EyeOff className="w-5 h-5 text-gray-400" /> : 
+                            <Eye className="w-5 h-5 text-gray-400" />
+                          }
+                        </button>
+                      </div>
+                      {errors.newPassword && <p className="text-xs text-red-500 mt-1">{errors.newPassword}</p>}
+                    </div>
+                    
+                    <div>
+                      <label className="text-xs font-medium text-gray-700 mb-1 block uppercase tracking-wide">
+                        Confirm Password
+                      </label>
+                      <div className="relative">
+                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                        <input
+                          name="confirmPassword"
+                          type={showPassword ? 'text' : 'password'}
+                          value={confirmPassword}
+                          onChange={handleNewPasswordChange}
+                          className={`w-full pl-10 pr-12 py-3 border rounded-lg focus:ring-2 focus:ring-[#52dd28ff]/20 focus:border-[#52dd28ff] ${
+                            errors.confirmPassword ? 'border-red-500' : 'border-gray-300'
+                          }`}
+                          placeholder="Confirm new password"
+                        />
+                        <button 
+                          type="button" 
+                          onClick={() => setShowPassword(!showPassword)} 
+                          className="absolute right-3 top-1/2 -translate-y-1/2"
+                        >
+                          {showPassword ? 
+                            <EyeOff className="w-5 h-5 text-gray-400" /> : 
+                            <Eye className="w-5 h-5 text-gray-400" />
+                          }
+                        </button>
+                      </div>
+                      {errors.confirmPassword && <p className="text-xs text-red-500 mt-1">{errors.confirmPassword}</p>}
+                    </div>
+                    
+                    <div className="flex items-center justify-between text-sm">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          // Resend OTP for password reset
+                          if (countdown === 0) {
+                            handleForgotPassword({ preventDefault: () => {} });
+                          }
+                        }}
+                        disabled={isLoading || countdown > 0}
+                        className="text-[#52dd28ff] hover:underline disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {countdown > 0 ? `Resend in ${formatTime(countdown)}` : 'Resend Code'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setForgotPasswordStep(false);
+                          setOtpStep(false);
+                          setIsLogin(true);
+                          setOtp('');
+                          setNewPassword('');
+                          setConfirmPassword('');
+                          setErrors({});
+                        }}
+                        className="text-gray-600 hover:text-gray-900"
+                      >
+                        Back to Login
+                      </button>
+                    </div>
+                    
+                    <button
+                      type="submit"
+                      disabled={isLoading || otp.length !== 6 || !newPassword || !confirmPassword}
+                      className="w-full py-3 bg-[#52dd28ff] text-white rounded-lg font-medium flex items-center justify-center gap-2 hover:bg-[#45b824] transition-colors disabled:opacity-50"
+                    >
+                      {isLoading ? (
+                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      ) : (
+                        <>
+                          Reset Password
+                          <ArrowRight className="w-5 h-5" />
+                        </>
+                      )}
+                    </button>
+                  </form>
+                )}
+
+                {/* Main Login/Register Form */}
+                {!otpStep && !forgotPasswordStep && (
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    {/* Authentication Method Selector */}
+                    <div className="flex bg-gray-100 rounded-lg p-1 mb-4">
+                      <button
+                        type="button"
+                        onClick={() => setAuthMethod('email')}
+                        className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+                          authMethod === 'email'
+                            ? 'bg-white text-green-600 shadow-sm'
+                            : 'text-gray-600 hover:text-gray-800'
+                        }`}
+                      >
+                        <span className="flex items-center justify-center space-x-2">
+                          <Mail className="w-4 h-4" />
+                          <span>Email</span>
+                        </span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setAuthMethod('mobile')}
+                        className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+                          authMethod === 'mobile'
+                            ? 'bg-white text-green-600 shadow-sm'
+                            : 'text-gray-600 hover:text-gray-800'
+                        }`}
+                      >
+                        <span className="flex items-center justify-center space-x-2">
+                          <span>📱</span>
+                          <span>Mobile</span>
+                        </span>
+                      </button>
+                    </div>
+
+                    {!isLogin && (
+                      <div>
+                        <label className="text-xs font-medium text-gray-700 mb-1 block uppercase tracking-wide">
+                          Full Name
+                        </label>
+                        <div className="relative">
+                          <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                          <input
+                            name="name"
+                            value={formData.name}
+                            onChange={handleChange}
+                            className={`w-full pl-10 pr-3 py-2.5 text-sm border rounded-lg focus:ring-2 focus:ring-[#52dd28ff]/20 focus:border-[#52dd28ff] ${
+                              errors.name ? 'border-red-500' : 'border-gray-300'
+                            }`}
+                            placeholder="Full name"
+                          />
+                        </div>
+                        {errors.name && <p className="text-xs text-red-500 mt-1">{errors.name}</p>}
+                      </div>
+                    )}
+
+                    {/* Email or Mobile Input */}
+                    <div>
+                      <label className="text-xs font-medium text-gray-700 mb-1 block uppercase tracking-wide">
+                        {authMethod === 'email' ? 'Email' : 'Mobile Number'}
+                      </label>
+                      <div className="relative">
+                        {authMethod === 'email' ? (
+                          <>
+                            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                            <input
+                              name="email"
+                              type="email"
+                              value={formData.email}
+                              onChange={handleChange}
+                              className={`w-full pl-10 pr-3 py-2.5 text-sm border rounded-lg focus:ring-2 focus:ring-[#52dd28ff]/20 focus:border-[#52dd28ff] ${
+                                errors.email ? 'border-red-500' : 'border-gray-300'
+                              }`}
+                              placeholder="your@email.com"
+                            />
+                          </>
+                        ) : (
+                          <>
+                            <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center">
+                              <span className="text-gray-400 text-sm">+91</span>
+                            </div>
+                            <input
+                              name="mobile"
+                              type="tel"
+                              value={formData.mobile}
+                              onChange={handleMobileChange}
+                              className={`w-full pl-12 pr-3 py-2.5 text-sm border rounded-lg focus:ring-2 focus:ring-[#52dd28ff]/20 focus:border-[#52dd28ff] ${
+                                errors.mobile ? 'border-red-500' : 'border-gray-300'
+                              }`}
+                              placeholder="9876543210"
+                              maxLength={10}
+                            />
+                          </>
+                        )}
+                      </div>
+                      {authMethod === 'email' && errors.email && <p className="text-xs text-red-500 mt-1">{errors.email}</p>}
+                      {authMethod === 'mobile' && errors.mobile && <p className="text-xs text-red-500 mt-1">{errors.mobile}</p>}
+                    </div>
 
                   <div>
                     <label className="text-xs font-medium text-gray-700 mb-1 block uppercase tracking-wide">
@@ -1019,6 +1672,19 @@ function AuthForm() {
                     )}
                   </button>
 
+                  {/* Forgot Password Link - Only for login */}
+                  {isLogin && (
+                    <div className="text-center">
+                      <button
+                        type="button"
+                        onClick={handleForgotPassword}
+                        className="text-xs text-[#52dd28ff] hover:underline"
+                      >
+                        Forgot Password?
+                      </button>
+                    </div>
+                  )}
+
                   <div className="relative my-4">
                     <div className="absolute inset-0 flex items-center">
                       <div className="w-full border-t border-gray-300"></div>
@@ -1043,6 +1709,7 @@ function AuthForm() {
                     {isLogin ? 'Sign in with Google' : 'Sign up with Google'}
                   </button>
                 </form>
+                )}
 
                 <div className="mt-4 text-center">
                   <p className="text-xs sm:text-sm text-gray-600">
@@ -1054,6 +1721,11 @@ function AuthForm() {
                         setFormData({ name: '', email: '', password: '' });
                         setErrors({});
                         setIsAdmin(false); // Reset admin toggle when switching modes
+                        setOtpStep(false);
+                        setForgotPasswordStep(false);
+                        setOtp('');
+                        setNewPassword('');
+                        setConfirmPassword('');
                       }}
                       className="ml-1 text-[#52dd28ff] font-medium hover:underline"
                     >
