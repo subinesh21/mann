@@ -15,6 +15,7 @@ export async function GET(request: NextRequest) {
     const inStock = searchParams.get('inStock');
     const isActive = searchParams.get('isActive');
     const search = searchParams.get('search');
+    const id = searchParams.get('id'); // New parameter for direct ID lookup
     
     // Build query
     let query: any = { isActive: true }; // Only show active products by default
@@ -25,6 +26,62 @@ export async function GET(request: NextRequest) {
     if (isActive !== null) query.isActive = isActive === 'true';
     if (search) {
       query.$text = { $search: search };
+    }
+    
+    // Handle direct ID lookup
+    if (id) {
+      try {
+        // Try to find by _id first
+        const productById = await Product.findOne({ 
+          _id: id, 
+          isActive: true 
+        }).lean();
+        
+        if (productById) {
+          return NextResponse.json({
+            success: true,
+            count: 1,
+            products: [productById]
+          });
+        }
+        
+        // Try by id field
+        const productByFieldId = await Product.findOne({ 
+          id: id, 
+          isActive: true 
+        }).lean();
+        
+        if (productByFieldId) {
+          return NextResponse.json({
+            success: true,
+            count: 1,
+            products: [productByFieldId]
+          });
+        }
+        
+        // Try numeric ID
+        const numericId = parseInt(id);
+        if (!isNaN(numericId)) {
+          const productByNumericId = await Product.findOne({ 
+            id: numericId, 
+            isActive: true 
+          }).lean();
+          
+          if (productByNumericId) {
+            return NextResponse.json({
+              success: true,
+              count: 1,
+              products: [productByNumericId]
+            });
+          }
+        }
+        
+        // If no direct match, fall back to search
+        query.$text = { $search: id };
+      } catch (error) {
+        // If ID parsing fails, fall back to text search
+        query.$text = { $search: id };
+      }
     }
     
     const products = await Product.find(query).sort({ createdAt: -1 });

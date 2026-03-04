@@ -72,46 +72,14 @@ export default function ProductDetailsPage() {
       setLoading(true);
       console.log('Fetching product details for ID:', productId);
       
-      // First try direct ID match
-      const response = await fetch(`/api/products?search="${productId}"`);
+      // Use direct ID lookup instead of search
+      const response = await fetch(`/api/products?id=${productId}`);
       const data = await response.json();
-      console.log('API Response:', data);
-      
-      let foundProduct = null;
+      console.log('Direct ID API Response:', data);
       
       if (data.success && data.products.length > 0) {
-        // Look for exact ID match
-        foundProduct = data.products.find(p => 
-          p._id === productId || 
-          p.id === productId || 
-          p._id?.toString() === productId ||
-          p.id?.toString() === productId
-        );
-        console.log('Found by exact match:', foundProduct);
-      }
-      
-      // If not found, try numeric search
-      if (!foundProduct) {
-        const numericId = parseInt(productId);
-        if (!isNaN(numericId)) {
-          console.log('Trying numeric search for ID:', numericId);
-          const numericResponse = await fetch(`/api/products?search=${numericId}`);
-          const numericData = await numericResponse.json();
-          console.log('Numeric search response:', numericData);
-          
-          if (numericData.success && numericData.products.length > 0) {
-            foundProduct = numericData.products.find(p => 
-              p.id === numericId || 
-              p._id === numericId ||
-              p.id?.toString() === numericId.toString()
-            );
-            console.log('Found by numeric match:', foundProduct);
-          }
-        }
-      }
-      
-      if (foundProduct) {
-        console.log('Setting product:', foundProduct);
+        const foundProduct = data.products[0];
+        console.log('Found product:', foundProduct);
         setProduct(foundProduct);
         
         if (foundProduct.colors && foundProduct.colors.length > 0) {
@@ -133,7 +101,7 @@ export default function ProductDetailsPage() {
           setSelectedImage(0);
         }
       } else {
-        console.log('Product not found');
+        console.log('Product not found with direct ID lookup');
         setProduct(null);
       }
     } catch (error) {
@@ -351,37 +319,38 @@ export default function ProductDetailsPage() {
                 {product.description}
               </p>
 
-              {/* Color Selection */}
+              {/* Color Selection - Checkboxes */}
               {product.colors && product.colors.length > 0 && (
                 <div className="mb-5 sm:mb-6">
                   <h4 className="text-xs sm:text-sm font-medium text-[#131212] mb-2 sm:mb-3">
-                    Color: 
-                    <span 
-                      className="ml-2 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-sm font-medium"
-                      style={{ 
-                        backgroundColor: getColorCode(selectedColor),
-                        color: getTextColorForBackground(getColorCode(selectedColor))
-                      }}
-                    >
-                      {selectedColor}
-                    </span>
+                    Colors:
                   </h4>
-                  <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
                     {product.colors.map((color) => (
-                      <button
+                      <label 
                         key={color}
-                        onClick={() => setSelectedColor(color)}
-                        className={`w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-full border-2 transition-all ${
+                        className={`flex items-center gap-2 p-2 rounded-lg border cursor-pointer transition-all ${
                           selectedColor === color 
-                            ? 'border-[#131212] ring-2 ring-[#fbb710] scale-110' 
-                            : 'border-gray-300 hover:scale-110'
+                            ? 'border-[#fbb710] bg-[#fffbeb]' 
+                            : 'border-gray-200 hover:border-gray-300'
                         }`}
-                        style={{ 
-                          backgroundColor: getColorCode(color),
-                          color: getTextColorForBackground(getColorCode(color))
-                        }}
-                        title={color}
-                      />
+                      >
+                        <input
+                          type="radio"
+                          name="color-selection"
+                          checked={selectedColor === color}
+                          onChange={() => setSelectedColor(color)}
+                          className="w-4 h-4 text-[#fbb710] focus:ring-[#fbb710] border-gray-300"
+                        />
+                        <div 
+                          className="w-6 h-6 rounded-full border border-gray-300"
+                          style={{ backgroundColor: getColorCode(color) }}
+                          title={color}
+                        />
+                        <span className="text-xs sm:text-sm text-[#131212] truncate">
+                          {color}
+                        </span>
+                      </label>
                     ))}
                   </div>
                 </div>
