@@ -70,12 +70,48 @@ export default function ProductDetailsPage() {
   const fetchProductDetails = async () => {
     try {
       setLoading(true);
+      console.log('Fetching product details for ID:', productId);
       
-      const response = await fetch(`/api/products?search=${productId}`);
+      // First try direct ID match
+      const response = await fetch(`/api/products?search="${productId}"`);
       const data = await response.json();
+      console.log('API Response:', data);
+      
+      let foundProduct = null;
       
       if (data.success && data.products.length > 0) {
-        const foundProduct = data.products[0]; // API returns array
+        // Look for exact ID match
+        foundProduct = data.products.find(p => 
+          p._id === productId || 
+          p.id === productId || 
+          p._id?.toString() === productId ||
+          p.id?.toString() === productId
+        );
+        console.log('Found by exact match:', foundProduct);
+      }
+      
+      // If not found, try numeric search
+      if (!foundProduct) {
+        const numericId = parseInt(productId);
+        if (!isNaN(numericId)) {
+          console.log('Trying numeric search for ID:', numericId);
+          const numericResponse = await fetch(`/api/products?search=${numericId}`);
+          const numericData = await numericResponse.json();
+          console.log('Numeric search response:', numericData);
+          
+          if (numericData.success && numericData.products.length > 0) {
+            foundProduct = numericData.products.find(p => 
+              p.id === numericId || 
+              p._id === numericId ||
+              p.id?.toString() === numericId.toString()
+            );
+            console.log('Found by numeric match:', foundProduct);
+          }
+        }
+      }
+      
+      if (foundProduct) {
+        console.log('Setting product:', foundProduct);
         setProduct(foundProduct);
         
         if (foundProduct.colors && foundProduct.colors.length > 0) {
@@ -97,40 +133,8 @@ export default function ProductDetailsPage() {
           setSelectedImage(0);
         }
       } else {
-        // Try numeric ID search
-        const numericId = parseInt(productId);
-        if (!isNaN(numericId)) {
-          const numericResponse = await fetch(`/api/products?search=${numericId}`);
-          const numericData = await numericResponse.json();
-          
-          if (numericData.success && numericData.products.length > 0) {
-            const foundByNumericId = numericData.products[0];
-            setProduct(foundByNumericId);
-            
-            if (foundByNumericId.colors && foundByNumericId.colors.length > 0) {
-              setSelectedColor(foundByNumericId.colors[0]);
-              const colorImages = foundByNumericId.images?.[foundByNumericId.colors[0]];
-              if (colorImages && colorImages.length > 0) {
-                const images = [
-                  foundByNumericId.primaryImage,
-                  ...colorImages.slice(0, 3)
-                ];
-                setProductImages(images);
-                setSelectedImage(0);
-              } else {
-                setProductImages([foundByNumericId.primaryImage].filter(Boolean));
-                setSelectedImage(0);
-              }
-            } else {
-              setProductImages([foundByNumericId.primaryImage].filter(Boolean));
-              setSelectedImage(0);
-            }
-          } else {
-            setProduct(null);
-          }
-        } else {
-          setProduct(null);
-        }
+        console.log('Product not found');
+        setProduct(null);
       }
     } catch (error) {
       console.error('Error fetching product:', error);
