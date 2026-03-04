@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get('search');
     
     // Build query
-    let query: any = {};
+    let query: any = { isActive: true }; // Only show active products by default
     
     if (category) query.category = category;
     if (brand) query.brand = brand;
@@ -38,7 +38,11 @@ export async function GET(request: NextRequest) {
   } catch (error: any) {
     console.error('Get products error:', error);
     return NextResponse.json(
-      { message: 'Failed to fetch products' },
+      { 
+        success: false,
+        message: 'Failed to fetch products',
+        error: error.message 
+      },
       { status: 500 }
     );
   }

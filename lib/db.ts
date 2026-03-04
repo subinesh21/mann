@@ -17,12 +17,13 @@ declare global {
 const cached = globalThis._mongooseCache ?? { conn: null, promise: null };
 if (process.env.NODE_ENV !== 'production') globalThis._mongooseCache = cached;
 
-// Connection options with better timeout handling
+// Connection options with better timeout handling for Atlas
 const connectionOptions = {
-  serverSelectionTimeoutMS: 10000, // 10 second timeout
+  serverSelectionTimeoutMS: 30000, // 30 second timeout for Atlas
   socketTimeoutMS: 45000, // 45 second timeout
   maxPoolSize: 10, // Maintain up to 10 socket connections
   heartbeatFrequencyMS: 10000, // Ping every 10 seconds
+  retryWrites: true
 };
 
 export async function connectDB(maxRetries = 3): Promise<Mongoose> {

@@ -39,7 +39,11 @@ export async function GET(request: NextRequest) {
   } catch (error: any) {
     console.error('Get products error:', error);
     return NextResponse.json(
-      { message: 'Failed to fetch products' },
+      { 
+        success: false,
+        message: 'Failed to fetch products',
+        error: error.message 
+      },
       { status: 500 }
     );
   }

@@ -47,6 +47,8 @@ export default function AdminProductManager() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [expandedProduct, setExpandedProduct] = useState(null);
+  const [isAddingNew, setIsAddingNew] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     price: '',
@@ -92,13 +94,47 @@ export default function AdminProductManager() {
     }));
   };
 
+  const handleImageUpload = async (e, fieldName) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setUploading(true);
+    
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+
+      const response = await fetch('/api/admin/upload', {
+        method: 'POST',
+        body: formData
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        setFormData(prev => ({
+          ...prev,
+          [fieldName]: data.imageUrl
+        }));
+        toast.success('Image uploaded successfully');
+      } else {
+        toast.error(data.message || 'Failed to upload image');
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
+      toast.error('Failed to upload image');
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
     try {
-      const productId = expandedProduct;
-      const url = `/api/admin/products/${productId}`;
-      const method = 'PUT';
+      const isUpdate = expandedProduct && expandedProduct !== 'new';
+      const url = isUpdate ? `/api/admin/products/${expandedProduct}` : '/api/admin/products';
+      const method = isUpdate ? 'PUT' : 'POST';
       
       const response = await fetch(url, {
         method,
@@ -116,8 +152,9 @@ export default function AdminProductManager() {
       const data = await response.json();
       
       if (response.ok) {
-        toast.success('Product updated successfully');
+        toast.success(isUpdate ? 'Product updated successfully' : 'Product created successfully');
         setExpandedProduct(null);
+        setIsAddingNew(false);
         resetForm();
         fetchProducts();
       } else {
@@ -130,24 +167,29 @@ export default function AdminProductManager() {
   };
 
   const handleEdit = (product) => {
-    setExpandedProduct(expandedProduct === product._id ? null : product._id);
-    if (expandedProduct !== product._id) {
-      setFormData({
-        name: product.name,
-        price: product.price.toString(),
-        originalPrice: product.originalPrice?.toString() || '',
-        primaryImage: product.primaryImage,
-        hoverImage: product.hoverImage || '',
-        category: product.category,
-        brand: product.brand,
-        colors: product.colors.join(', '),
-        inStock: product.inStock,
-        description: product.description,
-        rating: product.rating.toString(),
-        reviews: product.reviews.toString(),
-        isActive: product.isActive
-      });
-    }
+    setExpandedProduct(product._id);
+    setIsAddingNew(false);
+    setFormData({
+      name: product.name,
+      price: product.price.toString(),
+      originalPrice: product.originalPrice?.toString() || '',
+      primaryImage: product.primaryImage,
+      hoverImage: product.hoverImage || '',
+      category: product.category,
+      brand: product.brand,
+      colors: product.colors.join(', '),
+      inStock: product.inStock,
+      description: product.description,
+      rating: product.rating.toString(),
+      reviews: product.reviews.toString(),
+      isActive: product.isActive
+    });
+  };
+
+  const handleAddNew = () => {
+    setExpandedProduct('new');
+    setIsAddingNew(true);
+    resetForm();
   };
 
   const handleDelete = async (productId) => {
@@ -234,6 +276,12 @@ export default function AdminProductManager() {
     });
   };
 
+  const cancelForm = () => {
+    setExpandedProduct(null);
+    setIsAddingNew(false);
+    resetForm();
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -246,31 +294,27 @@ export default function AdminProductManager() {
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold text-gray-900">Product Management</h1>
-        <button
-          onClick={() => {
-            setExpandedProduct('new');
-            resetForm();
-          }}
-          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center space-x-2"
-        >
-          <AddIcon />
-          <span>Add New Product</span>
-        </button>
+        <div className="flex space-x-3">
+          <button
+            onClick={handleAddNew}
+            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center space-x-2"
+          >
+            <AddIcon />
+            <span>Add New Product</span>
+          </button>
+        </div>
       </div>
 
-      {/* Product Form - Now appears as dropdown */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-        <div className="flex justify-between items-center mb-4 cursor-pointer" onClick={() => setExpandedProduct(expandedProduct === 'form' ? null : 'form')}>
-          <h2 className="text-xl font-semibold">
-            {expandedProduct === 'new' ? 'Add New Product' : expandedProduct ? 'Edit Product' : 'Product Actions'}
-          </h2>
-          <div className="transform transition-transform duration-200">
-            {expandedProduct === 'form' || expandedProduct === 'new' || expandedProduct ? '▼' : '▶'}
+      {/* Product Form */}
+      {(expandedProduct === 'new' || expandedProduct) && (
+        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold">
+              {isAddingNew ? 'Add New Product' : 'Edit Product'}
+            </h2>
           </div>
-        </div>
-        
-        {(expandedProduct === 'form' || expandedProduct === 'new' || expandedProduct) && (
-          <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t">
+          
+          <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Product Name *</label>
               <input
@@ -309,26 +353,74 @@ export default function AdminProductManager() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Primary Image URL *</label>
-              <input
-                type="text"
-                name="primaryImage"
-                value={formData.primaryImage}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                required
-              />
+              <label className="block text-sm font-medium text-gray-700 mb-1">Primary Image *</label>
+              <div className="flex items-start space-x-3">
+                <input
+                  type="text"
+                  name="primaryImage"
+                  value={formData.primaryImage}
+                  onChange={handleInputChange}
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  required
+                  placeholder="Enter image URL or upload below"
+                />
+                <div className="flex flex-col space-y-2">
+                  <label className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md text-sm cursor-pointer transition-colors">
+                    {uploading ? 'Uploading...' : 'Upload'}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleImageUpload(e, 'primaryImage')}
+                      className="hidden"
+                      disabled={uploading}
+                    />
+                  </label>
+                </div>
+              </div>
+              {formData.primaryImage && (
+                <div className="mt-2">
+                  <img 
+                    src={formData.primaryImage} 
+                    alt="Preview" 
+                    className="h-20 w-20 object-cover rounded-md border"
+                  />
+                </div>
+              )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Hover Image URL</label>
-              <input
-                type="text"
-                name="hoverImage"
-                value={formData.hoverImage}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-              />
+              <label className="block text-sm font-medium text-gray-700 mb-1">Hover Image</label>
+              <div className="flex items-start space-x-3">
+                <input
+                  type="text"
+                  name="hoverImage"
+                  value={formData.hoverImage}
+                  onChange={handleInputChange}
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  placeholder="Enter image URL or upload below"
+                />
+                <div className="flex flex-col space-y-2">
+                  <label className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md text-sm cursor-pointer transition-colors">
+                    {uploading ? 'Uploading...' : 'Upload'}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleImageUpload(e, 'hoverImage')}
+                      className="hidden"
+                      disabled={uploading}
+                    />
+                  </label>
+                </div>
+              </div>
+              {formData.hoverImage && (
+                <div className="mt-2">
+                  <img 
+                    src={formData.hoverImage} 
+                    alt="Preview" 
+                    className="h-20 w-20 object-cover rounded-md border"
+                  />
+                </div>
+              )}
             </div>
 
             <div>
@@ -437,28 +529,36 @@ export default function AdminProductManager() {
               </label>
             </div>
 
-            <div className="md:col-span-2 flex space-x-4">
+            <div className="md:col-span-2 flex space-x-4 pt-4">
               <button
                 type="submit"
-                className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition-colors"
+                className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition-colors flex items-center"
+                disabled={uploading}
               >
-                {expandedProduct === 'new' ? 'Create Product' : 'Update Product'}
+                {uploading ? (
+                  <>
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Uploading...
+                  </>
+                ) : (
+                  isAddingNew ? 'Create Product' : 'Update Product'
+                )}
               </button>
               
               <button
                 type="button"
-                onClick={() => {
-                  setExpandedProduct(null);
-                  resetForm();
-                }}
+                onClick={cancelForm}
                 className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg transition-colors"
               >
                 Cancel
               </button>
             </div>
           </form>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Products List */}
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
