@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
+import { uploadProductImage, uploadColorImages } from '@/lib/firebase-storage';
 
 // Simple SVG Icons
 const EditIcon = () => (
@@ -121,35 +122,41 @@ export default function AdminProductManager() {
     }));
   };
 
-  const handleImageUpload = async (e, fieldName) => {
+  const handleImageUpload = async (e, fieldName, colorName = null) => {
     const file = e.target.files[0];
     if (!file) return;
-
+    
     setUploading(true);
     
     try {
-      const formData = new FormData();
-      formData.append('image', file);
-
-      const response = await fetch('/api/admin/upload', {
-        method: 'POST',
-        body: formData
-      });
-
-      const data = await response.json();
+      let imageUrl;
       
-      if (data.success) {
+      if (colorName) {
+        // Handle color-specific image upload
+        imageUrl = await uploadProductImage(file, 'temp', `color_${colorName}`);
+        
+        setColorImages(prev => {
+          const currentImages = prev[colorName] || [];
+          return {
+            ...prev,
+            [colorName]: [...currentImages, imageUrl].slice(0, 3) // Max 3 images per color
+          };
+        });
+      } else {
+        // Handle regular field image upload
+        const productId = expandedProduct === 'new' ? 'new_product' : expandedProduct;
+        imageUrl = await uploadProductImage(file, productId, fieldName);
+        
         setFormData(prev => ({
           ...prev,
-          [fieldName]: data.imageUrl
+          [fieldName]: imageUrl
         }));
-        toast.success('Image uploaded successfully');
-      } else {
-        toast.error(data.message || 'Failed to upload image');
       }
+      
+      toast.success(`${colorName ? `${colorName} image` : fieldName} uploaded successfully to Firebase!`);
     } catch (error) {
       console.error('Upload error:', error);
-      toast.error('Failed to upload image');
+      toast.error(`Failed to upload ${colorName ? `${colorName} image` : fieldName}: ${error.message}`);
     } finally {
       setUploading(false);
     }
@@ -173,7 +180,8 @@ export default function AdminProductManager() {
           colors: formData.colors.split(',').map(color => color.trim()),
           rating: parseFloat(formData.rating),
           reviews: parseInt(formData.reviews),
-          images: colorImages // Add color images to the product data
+          images: colorImages,
+          faqs: formData.faqs.filter(faq => faq.question && faq.answer) // Filter out empty FAQs
         })
       });
 
