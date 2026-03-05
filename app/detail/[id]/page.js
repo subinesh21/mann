@@ -9,6 +9,8 @@ import Sidebar from '@/components/sections/Sidebar';
 import MobileNav from '@/components/MobileNav';
 import Footer from '@/components/sections/Footer';
 import ScrollToTop from '@/components/ScrollToTop';
+import SEO from '@/components/SEO';
+import { generateProductSchema, generateBreadcrumbSchema } from '@/lib/schema-markup';
 import { useCart } from '@/context/CartContext';
 import Link from 'next/link';
 // Remove hardcoded import
@@ -208,6 +210,29 @@ export default function ProductDetailsPage() {
     <div className="min-h-screen bg-white">
       <Sidebar />
       <MobileNav />
+      
+      {/* SEO for Product */}
+      <SEO 
+        title={`${product.name} - Thulira Sustainable ${product.category}`}
+        description={product.description.substring(0, 160) + '...'}
+        image={product.primaryImage}
+        keywords={`${product.name}, ${product.category}, sustainable, eco-friendly, ${product.colors ? product.colors.join(', ') : ''}`}
+        type="product"
+      />
+      
+      {/* Structured Data */}
+      <script 
+        type="application/ld+json" 
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(generateProductSchema(product))
+        }} 
+      />
+      <script 
+        type="application/ld+json" 
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(generateBreadcrumbSchema(`/detail/${productId}`))
+        }} 
+      />
 
       <div className="lg:ml-[280px] flex flex-col min-h-screen">
         <div className="h-14 lg:hidden"></div>

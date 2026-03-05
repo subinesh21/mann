@@ -4,6 +4,7 @@ import { Open_Sans, Poppins } from 'next/font/google';
 import { CartProvider } from '@/context/CartContext';
 import { AuthProvider } from '@/context/AuthContext';
 import MUIProvider from '@/components/MUIProvider';
+import SEO from '@/components/SEO';
 import { ToastContainer } from 'react-toastify';
 import './globals.css';
 import 'react-toastify/dist/ReactToastify.css';
@@ -27,11 +28,7 @@ const poppins = Poppins({
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${openSans.variable} ${poppins.variable}`}>
-      <head>
-        <title>Thulira - Sustainable Living</title>
-        <meta name="description" content="Thulira - Sustainable Living: Eco-friendly products for conscious consumers" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-      </head>
+      <SEO />
       <body className="bg-white">
         <MUIProvider>
           <AuthProvider>
