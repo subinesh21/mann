@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { CheckCircle, Package, Home } from 'lucide-react';
+import { CheckCircle, Package, Home, Mail, Phone } from 'lucide-react';
 import Link from 'next/link';
 import Sidebar from '@/components/sections/Sidebar';
 import Footer from '@/components/sections/Footer';
@@ -10,9 +11,15 @@ import ScrollToTop from '@/components/ScrollToTop';
 import { useCart } from '@/context/CartContext';
 
 export default function OrderSuccessPage() {
-  const [showScrollTop, setShowScrollTop] = useState(false);
+  const searchParams = useSearchParams();
   const { clearCart } = useCart();
-  const hasCleared = useRef(false); // Prevent multiple clears
+  const hasCleared = useRef(false);
+  
+  const [orderDetails, setOrderDetails] = useState({
+    orderId: '',
+    invoiceNumber: '',
+    amount: ''
+  });
 
   useEffect(() => {
     // Only clear cart once when component mounts
@@ -21,10 +28,21 @@ export default function OrderSuccessPage() {
       hasCleared.current = true;
     }
 
-    const handleScroll = () => setShowScrollTop(window.scrollY > 400);
+    // Get order details from URL params
+    const orderId = searchParams.get('orderId');
+    const invoiceNumber = searchParams.get('invoiceNumber');
+    
+    if (orderId || invoiceNumber) {
+      setOrderDetails({
+        orderId: orderId || '',
+        invoiceNumber: invoiceNumber || '',
+        amount: searchParams.get('amount') || ''
+      });
+    }
+
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [clearCart]); // Add clearCart to dependencies
+  }, [clearCart, searchParams]);
 
   return (
     <div className="min-h-screen bg-white">
@@ -54,33 +72,89 @@ export default function OrderSuccessPage() {
                 Order Placed Successfully!
               </h1>
               
+              {/* Order Details */}
+              {(orderDetails.orderId || orderDetails.invoiceNumber) && (
+                <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-6">
+                  <h3 className="text-lg font-semibold text-green-800 mb-3">Order Details</h3>
+                  {orderDetails.orderId && (
+                    <p className="text-sm text-green-700 mb-1">
+                      <strong>Order ID:</strong> {orderDetails.orderId}
+                    </p>
+                  )}
+                  {orderDetails.invoiceNumber && (
+                    <p className="text-sm text-green-700 mb-1">
+                      <strong>Invoice Number:</strong> {orderDetails.invoiceNumber}
+                    </p>
+                  )}
+                  {orderDetails.amount && (
+                    <p className="text-sm text-green-700">
+                      <strong>Amount Paid:</strong> ₹{orderDetails.amount}
+                    </p>
+                  )}
+                </div>
+              )}
+              
               <p className="text-[#6b6b6b] mb-8">
-                Thank you for your order. We'll send you a confirmation email shortly.
+                Thank you for your order! We've sent a confirmation email to your registered email address.
                 You can track your order status in your account dashboard.
               </p>
 
               <div className="bg-[#f5f7fa] p-6 rounded-lg mb-8">
                 <Package className="w-12 h-12 text-[#fbb710] mx-auto mb-3" />
-                <h3 className="text-lg font-semibold text-[#131212] mb-2">
+                <h3 className="text-lg font-semibold text-[#131212] mb-4">
                   What's Next?
                 </h3>
-                <p className="text-sm text-[#6b6b6b]">
-                  We'll process your order and update you on the status. 
-                  You'll receive updates via email and SMS.
-                </p>
+                <div className="space-y-3 text-left max-w-md mx-auto">
+                  <div className="flex items-start gap-3">
+                    <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-green-600 text-sm font-bold">1</span>
+                    </div>
+                    <p className="text-sm text-[#6b6b6b]">
+                      Order confirmation email will be sent shortly
+                    </p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-green-600 text-sm font-bold">2</span>
+                    </div>
+                    <p className="text-sm text-[#6b6b6b]">
+                      We'll process and prepare your order for shipment
+                    </p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-green-600 text-sm font-bold">3</span>
+                    </div>
+                    <p className="text-sm text-[#6b6b6b]">
+                      You'll receive tracking updates via email and SMS
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Contact Information */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+                <div className="flex items-center justify-center gap-2 text-sm text-[#6b6b6b]">
+                  <Mail className="w-4 h-4" />
+                  <span>support@thulira.com</span>
+                </div>
+                <div className="flex items-center justify-center gap-2 text-sm text-[#6b6b6b]">
+                  <Phone className="w-4 h-4" />
+                  <span>+91 98765 43210</span>
+                </div>
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
                   href="/account"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#fbb710] text-white hover:bg-[#131212] transition-colors"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#fbb710] text-white hover:bg-[#131212] transition-colors rounded"
                 >
                   <Package className="w-5 h-5" />
                   View My Orders
                 </Link>
                 <Link
                   href="/"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-[#ebebeb] text-[#131212] hover:border-[#fbb710] hover:text-[#fbb710] transition-colors"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-[#ebebeb] text-[#131212] hover:border-[#fbb710] hover:text-[#fbb710] transition-colors rounded"
                 >
                   <Home className="w-5 h-5" />
                   Continue Shopping
@@ -90,10 +164,8 @@ export default function OrderSuccessPage() {
           </motion.div>
         </div>
 
-        <Footer />
       </div>
 
-      <ScrollToTop visible={showScrollTop} />
     </div>
   );
 }

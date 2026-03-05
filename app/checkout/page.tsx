@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Script from 'next/script';
 import { motion } from 'framer-motion';
 import { 
   ArrowLeft, ShoppingBag, CreditCard, MapPin, Phone, User, 
@@ -38,6 +39,7 @@ export default function CheckoutPage() {
   const [deliveryInfo, setDeliveryInfo] = useState<any>(null);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('razorpay');
   const [paymentTab, setPaymentTab] = useState<'upi' | 'card' | 'wallet' | 'netbanking'>('upi');
+  const [razorpayLoaded, setRazorpayLoaded] = useState(false);
   
   // Shipping info state
   const [shippingInfo, setShippingInfo] = useState({
@@ -115,6 +117,37 @@ export default function CheckoutPage() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Load Razorpay SDK
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      // Check if Razorpay is already loaded
+      if (window.Razorpay) {
+        setRazorpayLoaded(true);
+        return;
+      }
+
+      // Dynamically load Razorpay SDK
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.async = true;
+      script.onload = () => {
+        setRazorpayLoaded(true);
+      };
+      script.onerror = () => {
+        console.error('Failed to load Razorpay SDK');
+        toast.error('Payment gateway initialization failed');
+      };
+      document.body.appendChild(script);
+
+      return () => {
+        // Cleanup: remove script when component unmounts
+        if (document.body.contains(script)) {
+          document.body.removeChild(script);
+        }
+      };
+    }
+  }, []);
+
   // Handlers
   const validateForm = () => {
     const newErrors: any = {};
@@ -177,16 +210,37 @@ export default function CheckoutPage() {
       return;
     }
 
+    // Check if Razorpay is loaded
+    if (!razorpayLoaded || !window.Razorpay) {
+      toast.error('Payment gateway is not ready. Please try again.');
+      return;
+    }
+
     setIsPlacingOrder(true);
 
     try {
+      // Prepare items data with proper structure
+      const orderItems = cartItems.map(item => ({
+        id: item._id || item.productId || item.id,
+        productId: item._id || item.productId || item.id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        image: item.image,
+        category: (item as any).category || 'homeware',
+        color: item.color || null,
+      }));
+
       // Initialize Razorpay payment
       const response = await fetch('/api/payment/razorpay', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          items: cartItems,
-          customerInfo: shippingInfo,
+          items: orderItems,
+          customerInfo: {
+            ...shippingInfo,
+            userId: user?.id || 'guest',
+          },
           pincode,
           paymentMethod: selectedPaymentMethod
         })
@@ -198,22 +252,23 @@ export default function CheckoutPage() {
         throw new Error(data.message || 'Failed to initiate payment');
       }
 
-      // Open Razorpay payment modal
+      // Open Razorpay payment modal with proper configuration
       const options = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
         amount: data.amount,
         currency: data.currency,
         name: 'Thulira Sustainable Products',
-        description: `Order #${data.orderId}`,
+        description: `Order Payment - ₹${(data.amount / 100).toFixed(2)}`,
         order_id: data.orderId,
         handler: async (response: any) => {
           // Payment successful
+          console.log('Payment response:', response);
           await handlePaymentSuccess(response, data.orderData);
         },
         prefill: {
           name: shippingInfo.fullName,
           email: shippingInfo.email,
-          contact: shippingInfo.phone
+          contact: shippingInfo.phone.replace(/\D/g, '') // Send only digits
         },
         theme: {
           color: '#2d5a3d'
@@ -223,10 +278,33 @@ export default function CheckoutPage() {
           card: true,
           netbanking: true,
           wallet: true
+        },
+        modal: {
+          ondismiss: () => {
+            console.log('Payment modal closed by user');
+            setIsPlacingOrder(false);
+          }
         }
       };
 
       const razorpay = new window.Razorpay(options);
+      razorpay.on('payment.failed', function (response: any) {
+        const error = response.error;
+        toast.error(`Payment failed: ${error.description || 'Please try again'}`);
+        setIsPlacingOrder(false);
+        
+        // Optionally update order status in backend
+        fetch('/api/payment/razorpay', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            razorpay_order_id: data.orderId,
+            razorpay_payment_id: '',
+            razorpay_signature: ''
+          })
+        }).catch(err => console.error('Error updating failed payment:', err));
+      });
+      
       razorpay.open();
 
     } catch (error: any) {
@@ -255,8 +333,13 @@ export default function CheckoutPage() {
         // Clear cart and show success
         clearCart();
         
-        // Redirect to success page
-        router.push(`/orders/success?orderId=${orderData.orderId}&invoiceNumber=${verifyData.invoiceNumber}`);
+        // Calculate amount from order data
+        const amount = ((orderData.pricing?.totalAmount || 0).toFixed(2));
+        
+        // Redirect to success page with all details
+        router.push(
+          `/orders/success?orderId=${orderData.orderId}&invoiceNumber=${verifyData.invoiceNumber}&amount=${amount}&dbOrderId=${verifyData.orderId || ''}`
+        );
       } else {
         throw new Error('Payment verification failed');
       }
@@ -289,9 +372,23 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f9fdfa]">
-      <MobileNav />
-      <Sidebar />
+    <>
+      {/* Load Razorpay SDK */}
+      <Script
+        src="https://checkout.razorpay.com/v1/checkout.js"
+        strategy="lazyOnload"
+        onLoad={() => {
+          console.log('Razorpay SDK loaded');
+          setRazorpayLoaded(true);
+        }}
+        onError={() => {
+          console.error('Failed to load Razorpay SDK');
+        }}
+      />
+      
+      <div className="min-h-screen bg-[#f9fdfa]">
+        <MobileNav />
+        <Sidebar />
       
       {/* Main Content */}
       <main className="pt-16 lg:pl-64">
@@ -752,5 +849,6 @@ export default function CheckoutPage() {
 
       <Footer />
     </div>
+    </>
   );
 }

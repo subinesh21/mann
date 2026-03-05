@@ -21,7 +21,8 @@ interface GSTCalculationResult {
 }
 
 export class GSTCalculator {
-  static isGSTApplicable(category: string): boolean {
+  static isGSTApplicable(category: string | undefined): boolean {
+    if (!category) return false;
     return GST_CONFIG.APPLICABLE_CATEGORIES.includes(category.toLowerCase());
   }
 
@@ -118,7 +119,7 @@ export class GSTCalculator {
 
     // Group products by category
     for (const product of products) {
-      const category = product.category.toLowerCase();
+      const category = (product.category || 'homeware').toLowerCase();
       
       if (!categoryBreakdown[category]) {
         categoryBreakdown[category] = {

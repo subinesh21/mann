@@ -97,7 +97,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           quantity: quantity,
           color: color,
         };
-        toast.success('Added to cart');
         return [...prevItems, newItem];
       }
     });
