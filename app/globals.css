@@ -142,11 +142,13 @@
 /* Premium Add to Cart Button Stylings */
 .premium-cart-button {
   position: relative;
-  width: 220px;
-  height: 70px;
+  width: 100%;
+  max-width:500px;
+  height: 60px;
   cursor: pointer;
   display: flex;
   align-items: center;
+  justify-content: center;
   border: 1px solid #52dd28ff;
   background-color: #52dd28ff;
   overflow: hidden;
@@ -155,25 +157,27 @@
 }
 
 .premium-cart-button .button__text {
-  transform: translateX(35px);
   color: #fff;
   font-weight: 700;
   font-size: 14px;
   transition: all 0.3s;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  padding-right: 48px;
+  z-index: 10;
 }
 
 .premium-cart-button .button__icon {
   position: absolute;
-  transform: translateX(170px);
+  right: 0;
+  top: 0;
   height: 100%;
-  width: 48px;
+  width: 50px;
   background-color: #45b824;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s;
+  transition: all 0.3s ease-out;
 }
 
 .premium-cart-button svg {
@@ -194,7 +198,6 @@
 
 .premium-cart-button:hover .button__icon {
   width: 100%;
-  transform: translateX(0);
 }
 
 .premium-cart-button:active .button__icon {
