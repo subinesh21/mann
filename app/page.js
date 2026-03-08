@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Sidebar from '@/components/sections/Sidebar';
 import MobileNav from '@/components/MobileNav';
+import Hero from '@/components/sections/Hero';
 import CategoryGrid from '@/components/sections/CategoryGrid';
 import Footer from '@/components/sections/Footer';
 import ScrollToTop from '@/components/ScrollToTop';
@@ -24,7 +25,8 @@ export default function HomePage() {
       <div className="lg:ml-[280px] flex flex-col min-h-screen">
         <div className="h-14 lg:hidden"></div>
 
-        <div className="flex-1">
+        <div className="flex-1 flex flex-col">
+          <Hero />
           <CategoryGrid />
         </div>
 

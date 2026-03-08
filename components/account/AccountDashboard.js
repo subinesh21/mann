@@ -13,6 +13,7 @@ import Sidebar from '@/components/sections/Sidebar';
 import MobileNav from '@/components/MobileNav';
 import { toast } from 'react-toastify';
 import UserInfoCard from './UserInfoCard';
+import OrderTimeline from './OrderTimeline';
 
 // Status config for orders
 const statusConfig = {
@@ -173,8 +174,8 @@ export default function AccountDashboard() {
                             className="flex flex-col sm:flex-row sm:items-center justify-between gap-3"
                         >
                             <div>
-                                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-0.5">My Account</h1>
-                                <p className="text-xs sm:text-sm text-gray-600">Manage your profile and orders</p>
+                                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-0.5 font-cinzel">My Account</h1>
+                                <p className="text-xs sm:text-sm text-gray-600 font-mono">Manage your profile and orders</p>
                             </div>
                             <div className="flex items-center gap-2 sm:gap-3">
                                 <Link
@@ -200,7 +201,7 @@ export default function AccountDashboard() {
                             <UserInfoCard user={user} onProfileUpdate={fetchOrders} />
                         </div>
 
-                        <div className="grid grid-cols-3 lg:grid-cols-1 gap-2 sm:gap-4 lg:gap-4 self-start">
+                        <div className="grid grid-cols-3 lg:grid-cols-1 gap-2 sm:gap-4 lg:gap-4 self-start lg:h-91 sm:h-50">
                             <StatCard
                                 title="Total"
                                 value={orders.length}
@@ -339,55 +340,70 @@ export default function AccountDashboard() {
                                                             exit={{ height: 0, opacity: 0 }}
                                                             className="border-t border-gray-200 bg-gray-50"
                                                         >
-                                                            <div className="p-3 sm:p-4 space-y-3">
-                                                                {/* Order Items */}
-                                                                <div>
-                                                                    <h4 className="text-xs sm:text-sm font-semibold text-gray-900 mb-2 flex items-center gap-1">
-                                                                        <Package className="w-3 h-3" />
-                                                                        Items
-                                                                    </h4>
-                                                                    <div className="space-y-2">
-                                                                        {order.items?.map((item, itemIndex) => (
-                                                                            <div key={itemIndex} className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 bg-white rounded-box border border-gray-200">
-                                                                                <img
-                                                                                    src={item.image || '/images/product-chai-cups.jpg'}
-                                                                                    alt={item.name}
-                                                                                    className="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded-box border border-gray-200"
-                                                                                    onError={(e) => {
-                                                                                        e.target.src = '/images/product-chai-cups.jpg';
-                                                                                    }}
-                                                                                />
-                                                                                <div className="flex-1 min-w-0">
-                                                                                    <h5 className="text-xs font-medium text-gray-900 truncate">{item.name}</h5>
-                                                                                    {item.color && (
-                                                                                        <p className="text-[10px] text-gray-600">Color: {item.color}</p>
-                                                                                    )}
-                                                                                    <p className="text-[10px] text-gray-600">Qty: {item.quantity}</p>
-                                                                                </div>
-                                                                                <div className="text-right">
-                                                                                    <p className="text-xs font-semibold text-gray-900">
-                                                                                        {formatPrice(item.price * item.quantity)}
-                                                                                    </p>
-                                                                                </div>
+                                                            <div className="p-3 sm:p-4">
+                                                                <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 mb-4">
+                                                                    <div className="flex-1 space-y-3 lg:pr-4">
+                                                                        {/* Order Items */}
+                                                                        <div>
+                                                                            <h4 className="text-xs sm:text-sm font-semibold text-gray-900 mb-2 flex items-center gap-1">
+                                                                                <Package className="w-3 h-3" />
+                                                                                Items
+                                                                            </h4>
+                                                                            <div className="space-y-2">
+                                                                                {order.items?.map((item, itemIndex) => (
+                                                                                    <div key={itemIndex} className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 bg-white rounded-box border border-gray-200">
+                                                                                        <img
+                                                                                            src={item.image || '/images/product-chai-cups.jpg'}
+                                                                                            alt={item.name}
+                                                                                            className="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded-box border border-gray-200"
+                                                                                            onError={(e) => {
+                                                                                                e.target.src = '/images/product-chai-cups.jpg';
+                                                                                            }}
+                                                                                        />
+                                                                                        <div className="flex-1 min-w-0">
+                                                                                            <h5 className="text-xs font-medium text-gray-900 truncate">{item.name}</h5>
+                                                                                            {item.color && (
+                                                                                                <p className="text-[10px] text-gray-600">Color: {item.color}</p>
+                                                                                            )}
+                                                                                            <p className="text-[10px] text-gray-600">Qty: {item.quantity}</p>
+                                                                                        </div>
+                                                                                        <div className="text-right">
+                                                                                            <p className="text-xs font-semibold text-gray-900">
+                                                                                                {formatPrice(item.price * item.quantity)}
+                                                                                            </p>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                ))}
                                                                             </div>
-                                                                        ))}
-                                                                    </div>
-                                                                </div>
+                                                                        </div>
 
-                                                                {/* Shipping Address */}
-                                                                <div className="bg-white rounded-box p-2 sm:p-3 border border-gray-200">
-                                                                    <h4 className="text-xs sm:text-sm font-semibold text-gray-900 mb-1 flex items-center gap-1">
-                                                                        <MapPin className="w-3 h-3" />
-                                                                        Shipping
-                                                                    </h4>
-                                                                    <div className="text-[10px] sm:text-xs text-gray-600">
-                                                                        <p className="font-medium text-gray-900">{order.shippingAddress?.fullName}</p>
-                                                                        <p>{order.shippingAddress?.address}</p>
-                                                                        <p>{order.shippingAddress?.city}, {order.shippingAddress?.state} - {order.shippingAddress?.zipCode}</p>
-                                                                        <p className="flex items-center gap-1 mt-1">
-                                                                            <Phone className="w-2 h-2" />
-                                                                            {order.shippingAddress?.phone}
-                                                                        </p>
+                                                                        {/* Shipping Address */}
+                                                                        <div className="bg-white rounded-box p-2 sm:p-3 border border-gray-200">
+                                                                            <h4 className="text-xs sm:text-sm font-semibold text-gray-900 mb-1 flex items-center gap-1">
+                                                                                <MapPin className="w-3 h-3" />
+                                                                                Shipping
+                                                                            </h4>
+                                                                            <div className="text-[10px] sm:text-xs text-gray-600">
+                                                                                <p className="font-medium text-gray-900">{order.shippingAddress?.fullName}</p>
+                                                                                <p>{order.shippingAddress?.address}</p>
+                                                                                <p>{order.shippingAddress?.city}, {order.shippingAddress?.state} - {order.shippingAddress?.zipCode}</p>
+                                                                                <p className="flex items-center gap-1 mt-1">
+                                                                                    <Phone className="w-2 h-2" />
+                                                                                    {order.shippingAddress?.phone}
+                                                                                </p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    {/* Order Timeline - Vertical on right */}
+                                                                    <div className="lg:w-1/3 lg:min-w-[280px]">
+                                                                        <div className="bg-white rounded-box p-3 sm:p-4 border border-gray-200 h-full">
+                                                                            <OrderTimeline 
+                                                                                currentStatus={order.status} 
+                                                                                createdAt={order.createdAt} 
+                                                                                updatedAt={order.updatedAt} 
+                                                                            />
+                                                                        </div>
                                                                     </div>
                                                                 </div>
 

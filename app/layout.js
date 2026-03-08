@@ -85,8 +85,8 @@ export const metadata = {
     images: ['/images/hero-slide-1.jpg'],
   },
   icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon.ico',
+    icon: '/logo.png',
+    shortcut: '/logo.png',
     apple: '/logo.png',
   },
   alternates: {

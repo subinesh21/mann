@@ -264,20 +264,20 @@ export default function UserInfoCard({ user, onProfileUpdate }) {
                 <div>
                     <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-5 lg:gap-6">
                         <div className="w-16 h-16 sm:w-18 sm:h-18 lg:w-20 lg:h-20 bg-[#52dd28ff]/10 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm">
-                            <span className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#52dd28ff]">
+                            <span className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#52dd28ff] ">
                                 {user?.name?.charAt(0).toUpperCase()}
                             </span>
                         </div>
                         <div className="flex-1 min-w-0">
-                            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-1">{user?.name}</h2>
-                            <p className="text-xs sm:text-sm text-gray-600 flex items-center gap-1 sm:gap-2">
+                            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-1 font-cinzel">{user?.name}</h2>
+                            <p className="text-xs sm:text-sm text-gray-600 flex items-center gap-1 sm:gap-2 font-mono">
                                 <Mail className="w-3 h-3 sm:w-4 sm:h-4" />
                                 {user?.email}
                             </p>
 
                             <div className="mt-4 sm:mt-5 lg:mt-6 pt-4 sm:pt-5 border-t border-gray-200">
                                 <div className="flex items-center justify-between mb-3">
-                                    <h3 className="text-xs sm:text-sm font-medium text-gray-700 flex items-center gap-1 sm:gap-2 uppercase tracking-wide">
+                                    <h3 className="text-xs sm:text-sm font-cinzel text-gray-700 flex items-center gap-1 sm:gap-2 uppercase tracking-wide">
                                         <MapPin className="w-3 h-3 sm:w-4 sm:h-4" />
                                         Shipping Address
                                     </h3>
@@ -295,7 +295,7 @@ export default function UserInfoCard({ user, onProfileUpdate }) {
                                         Loading...
                                     </div>
                                 ) : hasAddress ? (
-                                    <div className="text-xs sm:text-sm text-gray-600 space-y-0.5">
+                                    <div className="text-xs sm:text-sm text-gray-600 space-y-0.5 font-mono">
                                         <p className="font-medium text-gray-900 text-sm">{profile.shippingAddress.fullName}</p>
                                         <p>{profile.shippingAddress.address}</p>
                                         <p>{profile.shippingAddress.city}, {profile.shippingAddress.state} - {profile.shippingAddress.zipCode}</p>

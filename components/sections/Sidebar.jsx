@@ -121,7 +121,7 @@ export default function Sidebar() {
         <div style={{ flexShrink: 0 }}>
           <a href="/" style={{ display: 'block' }}>
             <img
-              src="/logo.png"
+              src="/thulira.png"
               alt="Thulira - Sustainable Living"
               style={{
                 maxWidth: '100%',

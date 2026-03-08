@@ -43,7 +43,7 @@ export default function Footer() {
         </div>
 
         {/* Divider */}
-        <div className="w-full h-px bg-gray-800/50 mb-8"></div>
+        <div className="w-full h-px bg-white mb-8"></div>
 
         {/* Copyright Section */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
