@@ -45,10 +45,11 @@ export const metadata = {
     template: '%s | Thulira',
   },
   description:
-    'Discover sustainable, eco-friendly products for a greener lifestyle. Shop drinkware, tableware, storage solutions, and more from our curated collection.',
+    'Best biodegradable store in Chennai. Shop eco-friendly kitchenware, homeuse items, and sustainable garden supplies for a greener lifestyle.',
   keywords: [
-    'sustainable products', 'eco-friendly', 'green living', 'bamboo products',
-    'reusable items', 'zero waste', 'environmentally conscious', 'thulira',
+    'biodegradable products Chennai', 'eco-friendly kitchenware India', 'sustainable homeuse products',
+    'green living Chennai', 'bamboo products', 'zero waste kitchen Chennai',
+    'bio-degradable garden supplies', 'thulira chennai',
   ],
   authors: [{ name: 'Thulira' }],
   creator: 'Thulira',

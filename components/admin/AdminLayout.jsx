@@ -117,7 +117,7 @@ export default function AdminLayout({ children }) {
                     <span className="text-white font-bold text-base sm:text-lg">T</span>
                   </div>
                   <div>
-                    <h5 className="text-base sm:text-lg font-bold text-gray-900">Admin Panel</h5>
+                    <h5 className="text-base sm:text-lg font-bold font-cinzel text-gray-900">Admin Panel</h5>
                     <p className="text-xs sm:text-sm text-gray-500">Thulira</p>
                   </div>
                 </div>
@@ -164,7 +164,7 @@ export default function AdminLayout({ children }) {
                     >
                       <Icon className={`w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3 ${isActive ? 'text-white' : 'text-gray-500 group-hover:text-gray-700'
                         }`} />
-                      <span className={isActive ? 'text-white' : 'text-gray-800'}>
+                      <span className={`${isActive ? 'text-white' : 'text-gray-800'} font-cinzel`}>
                         {item.name}
                       </span>
                     </a>
@@ -200,7 +200,7 @@ export default function AdminLayout({ children }) {
               >
                 <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
               </button>
-              <h2 className="text-base sm:text-lg lg:text-xl font-bold text-gray-900">
+              <h2 className="text-base sm:text-lg lg:text-xl font-bold font-cinzel text-gray-900">
                 {sidebarItems.find(item => item.href === pathname)?.name || 'Dashboard'}
               </h2>
             </div>

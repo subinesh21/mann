@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 
 const VIDEOS = [
-  "/video/cup-video.mp4",
+  "/videos/cup-video.mp4",
 ];
 
 export default function Hero() {
@@ -56,9 +56,9 @@ export default function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 1 }}
-            className="text-[#52dd28ff] font-semibold tracking-[0.3em] uppercase text-xs md:text-sm mb-8 block drop-shadow-md"
+            className="text-[#52dd28ff] font-cinzel tracking-[0.3em] uppercase text-xs md:text-sm mb-4 block drop-shadow-md"
           >
-            Welcome to Thulira
+            Chennai&apos;s Premium Destination for Biodegradable Living
           </motion.span>
           
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-8 leading-[1.1] drop-shadow-lg" style={{ fontFamily: 'var(--font-cinzel), serif' }}>
@@ -70,12 +70,6 @@ export default function Hero() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-5 justify-center">
-            <Link 
-              href="/products" 
-              className="bg-[#52dd28ff] text-white px-10 py-4 rounded-full font-medium tracking-wide hover:bg-[#45b922] transition-colors duration-300 shadow-[0_10px_30px_rgba(82,221,40,0.3)] hover:shadow-[0_15px_35px_rgba(82,221,40,0.4)] hover:-translate-y-1 transform"
-            >
-              Shop Collection
-            </Link>
           </div>
         </motion.div>
       </div>

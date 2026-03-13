@@ -144,14 +144,14 @@ function OrderSuccessContent() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/account"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#fbb710] text-white hover:bg-[#131212] transition-colors rounded-box"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#52dd28ff] text-white hover:bg-[#3aa856] transition-colors rounded-box"
               >
                 <Package className="w-5 h-5" />
                 View My Orders
               </Link>
               <Link
                 href="/"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-[#ebebeb] text-[#131212] hover:border-[#fbb710] hover:text-[#fbb710] transition-colors rounded-box"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-[#ebebeb] text-[#131212] hover:border-[#52dd28ff] hover:text-[#52dd28ff] transition-colors rounded-box"
               >
                 <Home className="w-5 h-5" />
                 Continue Shopping

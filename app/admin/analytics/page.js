@@ -21,6 +21,7 @@ import {
   Box
 } from 'lucide-react';
 import AdminLayout from '@/components/admin/AdminLayout';
+import SafeImage from '@/components/SafeImage';
 
 // Simple Bar Chart Component
 function BarChart({ data, labelKey, valueKey, color = 'bg-primary' }) {
@@ -124,12 +125,12 @@ function StatCard({ title, value, subtitle, trend, trendUp, icon: Icon }) {
     >
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-[10px] sm:text-xs text-gray-600 mb-0.5">{title}</p>
-          <h3 className="text-sm sm:text-base font-bold text-gray-900">{value}</h3>
-          {subtitle && <p className="text-[8px] sm:text-[10px] text-gray-500 mt-0.5">{subtitle}</p>}
+          <p className="text-xs sm:text-sm text-gray-600 mb-0.5 font-cinzel">{title}</p>
+          <h3 className="text-base sm:text-xl font-bold text-gray-900">{value}</h3>
+          {subtitle && <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5">{subtitle}</p>}
         </div>
-        <div className="p-1.5 sm:p-2 bg-[#52dd28ff]/10 rounded-box">
-          <Icon className="w-3 h-3 sm:w-4 sm:h-4 text-[#52dd28ff]" />
+        <div className="p-2 sm:p-2.5 bg-[#52dd28ff]/10 rounded-box">
+          <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-[#52dd28ff]" />
         </div>
       </div>
       {trend !== undefined && (
@@ -224,7 +225,7 @@ export default function AnalyticsDashboard() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
           <div>
-            <h1 className="text-base sm:text-lg font-bold text-gray-900">Analytics</h1>
+            <h1 className="text-2xl sm:text-[26px] font-bold font-cinzel text-gray-900">Analytics</h1>
             <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5">Business performance metrics</p>
           </div>
 
@@ -285,8 +286,8 @@ export default function AnalyticsDashboard() {
             className="bg-white p-3 rounded-box border border-gray-200"
           >
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-xs font-semibold text-gray-900 flex items-center gap-1">
-                <TrendingUp className="w-3 h-3 text-[#52dd28ff]" />
+              <h3 className="text-sm sm:text-base font-semibold font-cinzel text-gray-900 flex items-center gap-1">
+                <TrendingUp className="w-3.5 h-3.5 text-[#52dd28ff]" />
                 Revenue Trend
               </h3>
               <span className="text-[8px] text-gray-500">Daily</span>
@@ -305,8 +306,8 @@ export default function AnalyticsDashboard() {
             className="bg-white p-3 rounded-box border border-gray-200"
           >
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-xs font-semibold text-gray-900 flex items-center gap-1">
-                <ShoppingCart className="w-3 h-3 text-[#52dd28ff]" />
+              <h3 className="text-sm sm:text-base font-semibold font-cinzel text-gray-900 flex items-center gap-1">
+                <ShoppingCart className="w-3.5 h-3.5 text-[#52dd28ff]" />
                 Orders Trend
               </h3>
               <span className="text-[8px] text-gray-500">Daily</span>
@@ -327,13 +328,13 @@ export default function AnalyticsDashboard() {
             transition={{ delay: 0.1 }}
             className="bg-white p-3 rounded-box border border-gray-200"
           >
-            <h3 className="text-xs font-semibold text-gray-900 mb-3 flex items-center gap-1">
-              <PieChart className="w-3 h-3 text-[#52dd28ff]" />
+            <h3 className="text-sm sm:text-base font-semibold font-cinzel text-gray-900 mb-3 flex items-center gap-1">
+              <PieChart className="w-3.5 h-3.5 text-[#52dd28ff]" />
               Order Status
             </h3>
             <BarChart
               data={Object.entries(analytics.orders?.byStatus || {}).map(([status, count]) => ({
-                status: status.slice(0, 3),
+                status: status.slice(0, 3).toUpperCase(),
                 count
               }))}
               labelKey="status"
@@ -349,13 +350,13 @@ export default function AnalyticsDashboard() {
             transition={{ delay: 0.15 }}
             className="bg-white p-3 rounded-box border border-gray-200"
           >
-            <h3 className="text-xs font-semibold text-gray-900 mb-3 flex items-center gap-1">
-              <CreditCard className="w-3 h-3 text-[#52dd28ff]" />
+            <h3 className="text-sm sm:text-base font-semibold font-cinzel text-gray-900 mb-3 flex items-center gap-1">
+              <CreditCard className="w-3.5 h-3.5 text-[#52dd28ff]" />
               Payment
             </h3>
             <BarChart
               data={Object.entries(analytics.paymentMethods || {}).map(([method, data]) => ({
-                method: method === 'cod' ? 'COD' : method.slice(0, 3),
+                method: method === 'cod' ? 'COD' : method.slice(0, 3).toUpperCase(),
                 count: data.count
               }))}
               labelKey="method"
@@ -371,8 +372,8 @@ export default function AnalyticsDashboard() {
             transition={{ delay: 0.2 }}
             className="bg-white p-3 rounded-box border border-gray-200"
           >
-            <h3 className="text-xs font-semibold text-gray-900 mb-3 flex items-center gap-1">
-              <Box className="w-3 h-3 text-[#52dd28ff]" />
+            <h3 className="text-sm sm:text-base font-semibold font-cinzel text-gray-900 mb-3 flex items-center gap-1">
+              <Box className="w-3.5 h-3.5 text-[#52dd28ff]" />
               Top Products
             </h3>
             <div className="space-y-2">
@@ -381,13 +382,15 @@ export default function AnalyticsDashboard() {
                   <span className="w-4 h-4 bg-gray-100 rounded-full flex items-center justify-center text-[8px] font-medium text-gray-600">
                     {index + 1}
                   </span>
-                  <img
+                  <SafeImage
                     src={product.image}
                     alt={product.name}
                     className="w-6 h-6 object-cover rounded-box"
+                    width={24}
+                    height={24}
                   />
                   <div className="flex-1 min-w-0">
-                    <p className="text-[10px] font-medium text-gray-900 truncate">{product.name}</p>
+                    <p className="text-[13px] font-medium text-gray-900 truncate">{product.name}</p>
                   </div>
                   <span className="text-[8px] font-medium text-gray-700">
                     {product.totalSold}
@@ -408,8 +411,8 @@ export default function AnalyticsDashboard() {
           transition={{ delay: 0.25 }}
           className="bg-white p-3 rounded-box border border-gray-200"
         >
-          <h3 className="text-xs font-semibold text-gray-900 mb-3 flex items-center gap-1">
-            <Package className="w-3 h-3 text-[#52dd28ff]" />
+          <h3 className="text-sm sm:text-base font-semibold font-cinzel text-gray-900 mb-3 flex items-center gap-1">
+            <Package className="w-3.5 h-3.5 text-[#52dd28ff]" />
             Inventory
           </h3>
           <div className="grid grid-cols-4 gap-1">

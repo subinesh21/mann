@@ -120,8 +120,8 @@ export default function UsersManagement() {
           className="flex items-center justify-between"
         >
           <div>
-            <h1 className="text-base sm:text-lg font-bold text-gray-900">Users</h1>
-            <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5">Manage registered users</p>
+            <h1 className="text-base sm:text-lg font-cinzel text-gray-900">Users</h1>
+            <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5 ">Manage registered users</p>
           </div>
           <div className="flex items-center gap-1 text-[10px] sm:text-xs bg-white px-2 py-1 rounded-box border border-gray-200">
             <Users className="w-3 h-3 text-[#52dd28ff]" />
@@ -187,7 +187,7 @@ export default function UsersManagement() {
                   <div className="flex items-center gap-3">
                     {/* Avatar */}
                     <div className="w-8 h-8 bg-[#52dd28ff]/10 rounded-full flex items-center justify-center flex-shrink-0">
-                      <span className="text-[10px] font-semibold text-[#52dd28ff]">
+                      <span className="text-[15px] font-semibold text-[#52dd28ff]">
                         {getInitials(user.name)}
                       </span>
                     </div>
@@ -195,20 +195,20 @@ export default function UsersManagement() {
                     {/* User Info */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-0.5">
-                        <h3 className="text-xs font-semibold text-gray-900 truncate">{user.name}</h3>
+                        <h5 className="text-xs font-semibold text-gray-900 truncate font-cinzel">{user.name}</h5>
                         <span className={`inline-flex items-center px-1.5 py-0.5 rounded-full text-[8px] font-medium ${user.isActive
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-red-100 text-red-800'
+                          ? 'bg-green-100 text-green-800'
+                          : 'bg-red-100 text-red-800'
                           }`}>
                           {user.isActive ? 'Active' : 'Inactive'}
                         </span>
                       </div>
-                      <p className="text-[10px] text-gray-500 flex items-center gap-1">
-                        <Mail className="w-2 h-2" />
+                      <p className="text-[15px] text-gray-500 flex items-center gap-1">
+                        <Mail className="w-4 h-4" />
                         {user.email}
                       </p>
-                      <p className="text-[8px] text-gray-400 flex items-center gap-1 mt-0.5">
-                        <Calendar className="w-2 h-2" />
+                      <p className="text-[12px] text-gray-400 flex items-center gap-1 mt-0.5">
+                        <Calendar className="w-4 h-4" />
                         Joined {formatDate(user.createdAt)}
                       </p>
                     </div>

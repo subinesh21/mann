@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
+import SafeImage from '@/components/SafeImage';
 import { uploadProductImage, uploadColorImages } from '@/lib/firebase-storage';
 
 // Simple SVG Icons
@@ -839,7 +840,13 @@ export default function AdminProductManager() {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <div className="flex-shrink-0 h-10 w-10">
-                        <img className="h-10 w-10 rounded-box object-cover" src={product.primaryImage} alt="" />
+                        <SafeImage 
+                          className="h-10 w-10 rounded-box object-cover" 
+                          src={product.primaryImage} 
+                          alt={product.name} 
+                          width={40}
+                          height={40}
+                        />
                       </div>
                       <div className="ml-4">
                         <div className="text-sm font-medium text-gray-900">{product.name}</div>

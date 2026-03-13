@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import SafeImage from '@/components/SafeImage';
 import { ShoppingCart, Eye, Heart, Scale, Image as ImageIcon } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
@@ -12,7 +12,6 @@ import { useRouter } from 'next/navigation';
 
 export default function ProductCard({ product, categoryImage, viewMode = 'grid' }) {
   const [isHovered, setIsHovered] = useState(false);
-  const [imageError, setImageError] = useState(false);
   const { addToCart } = useCart();
   const { addToWishlist, isInWishlist } = useWishlist();
   const { addToCompare } = useCompare();
@@ -47,20 +46,7 @@ export default function ProductCard({ product, categoryImage, viewMode = 'grid' 
   };
 
   const currentImage = getCurrentImage();
-  const hasImage = !!currentImage && !imageError;
 
-  // Placeholder Skeleton UI
-  const ImageSkeleton = () => (
-    <div className="w-full h-full flex flex-col items-center justify-center bg-[#f0f2f5] animate-pulse overflow-hidden px-4">
-      <div className="relative mb-3">
-        <ImageIcon className="w-10 h-10 lg:w-16 lg:h-16 text-gray-200" />
-        <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent animate-[shimmer_2s_infinite]" />
-      </div>
-      <span className="text-[10px] lg:text-xs text-gray-400 font-medium text-center line-clamp-2 uppercase tracking-tight opacity-70" style={{ fontFamily: 'var(--font-mono), monospace' }}>
-        {product.name}
-      </span>
-    </div>
-  );
 
   // LIST VIEW
   if (viewMode === 'list') {
@@ -71,20 +57,14 @@ export default function ProductCard({ product, categoryImage, viewMode = 'grid' 
         {/* Image */}
         <Link href={`/detail/${product._id || product.id}`} className="flex-shrink-0 w-32 sm:w-40 lg:w-48">
           <div className="relative h-full bg-[#f5f7fa] overflow-hidden">
-            {hasImage ? (
-              <Image
-                src={currentImage}
-                alt={`${product.name} - Thulira sustainable product`}
-                fill
-                sizes="(max-width: 640px) 128px, (max-width: 1024px) 160px, 192px"
-                className="object-cover"
-                onError={() => {
-                  setImageError(true);
-                }}
-              />
-            ) : (
-              <ImageSkeleton />
-            )}
+            <SafeImage
+              src={currentImage}
+              alt={`${product.name} - Thulira sustainable product`}
+              fill={true}
+              sizes="(max-width: 640px) 128px, (max-width: 1024px) 160px, 192px"
+              className="object-cover"
+              fallbackText={product.name}
+            />
             {!product.inStock && (
               <div className="absolute top-2 left-2 bg-gray-500 text-white text-[10px] font-medium px-1.5 py-0.5 rounded">
                 Out of Stock
@@ -160,22 +140,14 @@ export default function ProductCard({ product, categoryImage, viewMode = 'grid' 
     >
       <Link href={`/detail/${product._id || product.id}`}>
         <div className="relative aspect-square bg-[#f5f7fa] overflow-hidden mb-2 sm:mb-3 lg:mb-4">
-          {hasImage ? (
-            <Image
-              src={currentImage}
-              alt={`${product.name} - Thulira sustainable product`}
-              fill
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-              className="object-cover transition-transform duration-600 group-hover:scale-[1.03]"
-              onError={() => {
-                setImageError(true);
-              }}
-            />
-          ) : (
-            <div className="w-full h-full transition-transform duration-600 group-hover:scale-[1.03]">
-              <ImageSkeleton />
-            </div>
-          )}
+          <SafeImage
+            src={currentImage}
+            alt={`${product.name} - Thulira sustainable product`}
+            fill={true}
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="object-cover transition-transform duration-600 group-hover:scale-[1.03]"
+            fallbackText={product.name}
+          />
 
           {/* Quick Actions - Gray Circle Emoji Style */}
           <div

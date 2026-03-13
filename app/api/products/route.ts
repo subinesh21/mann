@@ -149,7 +149,8 @@ export async function GET(request: NextRequest) {
     // We can reverse the static array to maintain the behavior of "newest at top" if added at bottom, 
     // or just leave as is. The original code did `sort({ createdAt: -1 })`.
     // Let's just reverse the static list if it's not sorted.
-    mergedProducts.reverse();
+    // Maintain the order from the product-data file as requested
+    // mergedProducts.reverse();
 
     return NextResponse.json({
       success: true,

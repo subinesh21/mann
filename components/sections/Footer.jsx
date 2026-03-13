@@ -51,7 +51,7 @@ export default function Footer() {
             © {currentYear} <span className="text-white font-mono">Thulira</span> — All Rights Reserved.
           </p>
           <p className="text-white text-[10px] uppercase tracking-[0.2em]">
-            Sustainable Living & Eco-Friendly Products
+            Sustainable Living & Eco-Friendly Products | Chennai, India
           </p>
         </div>
       </div>

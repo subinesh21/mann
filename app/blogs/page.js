@@ -8,6 +8,7 @@ import { Calendar, User, Clock, ArrowRight, Search, Tag, ChevronRight } from 'lu
 import Sidebar from '@/components/sections/Sidebar';
 import MobileNav from '@/components/MobileNav';
 import Footer from '@/components/sections/Footer';
+import SafeImage from '@/components/SafeImage';
 
 import { blogPosts, categories } from '@/lib/blogData';
 
@@ -102,13 +103,11 @@ export default function BlogsPage() {
                     {/* Image Container */}
                     <div className="relative h-56 overflow-hidden bg-[#f5f7fa]">
                       <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
-                      <img
+                      <SafeImage
                         src={post.image}
                         alt={post.title}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                        onError={(e) => {
-                          e.target.src = '/images/product-chai-cups.jpg';
-                        }}
+                        fill={true}
                       />
                       {/* Category Badge */}
                       <span className="absolute top-4 left-4 z-20 bg-[#52dd28ff] text-white text-xs font-medium px-3 py-1 rounded-full">

@@ -657,7 +657,7 @@ export default function AuthForm() {
                                         </button>
 
                                         {isLogin && (
-                                            <div className="text-center">
+                                            <div className="text-center mt-2">
                                                 <button type="button" onClick={handleForgotPassword} className="text-xs text-[#52dd28ff] hover:underline">Forgot Password?</button>
                                             </div>
                                         )}
@@ -674,8 +674,8 @@ export default function AuthForm() {
                                 )}
 
                                 <div className="mt-4 text-center">
-                                    <p className="text-xs sm:text-sm text-gray-600">
-                                        {isLogin ? "Don't have an account?" : "Already have an account?"}
+                                    <p className="text-xs sm:text-sm text-gray-600 gap-7">
+                                        {isLogin ? "Don't have an account?  " : "Already have an account?  "}
                                         <button type="button" onClick={() => { setIsLogin(!isLogin); setFormData({ name: '', email: '', password: '' }); setErrors({}); setIsAdmin(false); setOtpStep(false); setForgotPasswordStep(false); }} className="ml-1 text-[#52dd28ff] font-medium hover:underline">
                                             {isLogin ? 'Sign Up' : 'Log In'}
                                         </button>

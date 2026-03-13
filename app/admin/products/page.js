@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { toast } from 'react-toastify';
+import SafeImage from '@/components/SafeImage';
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState([]);
@@ -146,10 +147,10 @@ export default function AdminProductsPage() {
         {/* Header */}
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Products Management</h1>
+            <h1 className="text-3xl font-bold font-cinzel text-gray-900">Products Management</h1>
             <p className="text-gray-600 mt-1">
               Manage {products.length} products from MongoDB
-            </p>
+            </p>  
           </div>
           <div className="flex items-center space-x-2">
             <Package className="w-6 h-6 text-green-600" />
@@ -237,10 +238,12 @@ export default function AdminProductsPage() {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <div className="flex-shrink-0 h-10 w-10">
-                          <img
+                          <SafeImage
                             className="h-10 w-10 rounded-box object-cover"
                             src={product.primaryImage}
                             alt={product.name}
+                            width={40}
+                            height={40}
                           />
                         </div>
                         <div className="ml-4">

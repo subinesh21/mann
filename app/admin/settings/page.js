@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { toast } from 'react-toastify';
+import SafeImage from '@/components/SafeImage';
 
 export default function AdminSettingsPage() {
     const [settings, setSettings] = useState(null);
@@ -167,21 +168,7 @@ export default function AdminSettingsPage() {
                                                 placeholder="Sustainable Living"
                                             />
                                         </div>
-                                        <div className="md:col-span-2">
-                                            <label className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">Logo URL</label>
-                                            <div className="flex gap-4">
-                                                <input
-                                                    type="text"
-                                                    value={settings.branding.logo}
-                                                    onChange={(e) => updateField('branding', 'logo', e.target.value)}
-                                                    className="flex-1 px-4 py-3 border border-gray-200 rounded-box focus:outline-none focus:ring-2 focus:ring-[#52dd28ff]/20 bg-gray-50/50"
-                                                    placeholder="/logo.png"
-                                                />
-                                                <div className="w-12 h-12 border border-gray-200 rounded-box p-1 bg-white flex-shrink-0">
-                                                    <img src={settings.branding.logo} alt="Logo Preview" className="w-full h-full object-contain" onError={(e) => e.target.src = '/logo.png'} />
-                                                </div>
-                                            </div>
-                                        </div>
+
                                     </div>
                                 </section>
                             </div>

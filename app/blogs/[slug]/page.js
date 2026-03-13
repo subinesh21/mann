@@ -9,6 +9,7 @@ import { Calendar, User, Clock, ArrowLeft, ArrowRight, Tag, Share2, BookOpen } f
 import Sidebar from '@/components/sections/Sidebar';
 import MobileNav from '@/components/MobileNav';
 import Footer from '@/components/sections/Footer';
+import SafeImage from '@/components/SafeImage';
 import { getBlogBySlug, getRelatedPosts } from '@/lib/blogData';
 
 export default function BlogDetailPage() {
@@ -272,17 +273,11 @@ export default function BlogDetailPage() {
               background: 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.1) 100%)',
               zIndex: 1
             }} />
-            <img
+            <SafeImage
               src={post.image}
               alt={post.title}
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover'
-              }}
-              onError={(e) => {
-                e.target.src = '/images/product-chai-cups.jpg';
-              }}
+              className="w-full h-full object-cover"
+              fill={true}
             />
 
             {/* Hero Content Overlay */}
@@ -521,20 +516,11 @@ export default function BlogDetailPage() {
                         }}
                       >
                         <div style={{ height: '200px', overflow: 'hidden', backgroundColor: '#f5f7fa' }}>
-                          <img
+                          <SafeImage
                             src={related.image}
                             alt={related.title}
-                            style={{
-                              width: '100%',
-                              height: '100%',
-                              objectFit: 'cover',
-                              transition: 'transform 0.5s ease'
-                            }}
-                            onError={(e) => {
-                              e.target.src = '/images/product-chai-cups.jpg';
-                            }}
-                            onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-                            onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                            className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                            fill={true}
                           />
                         </div>
                         <div style={{ padding: '20px' }}>

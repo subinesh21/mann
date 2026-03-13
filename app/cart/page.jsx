@@ -54,7 +54,7 @@ export default function CartPage() {
 
         <div className="flex-1 container mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between mb-3">
-            <h4 className="text-2xl sm:text-3xl font-bold text-[#131212]">Shopping Cart</h4>
+            <h4 className="text-xl sm:text-2xl font-cinzel text-[#131212]">Shopping Cart</h4>
             <Link
               href="/products"
               className="text-[#6b6b6b] text-sm mb-6"
@@ -217,7 +217,7 @@ export default function CartPage() {
               {/* Cart Summary - Smaller and Compact */}
               <div className="lg:w-64">
                 <div className="border border-[#ebebeb] p-4 sticky top-16 lg:top-4 rounded-box">
-                  <h3 className="text-base font-semibold text-[#131212] mb-3">Cart Total</h3>
+                  <h3 className="text-base font-cinzel text-[#131212] mb-3">Cart Total</h3>
 
                   <div className="space-y-2 mb-3">
                     <div className="flex justify-between text-xs">

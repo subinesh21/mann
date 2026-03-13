@@ -143,13 +143,14 @@
 .premium-cart-button {
   position: relative;
   width: 100%;
-  max-width:500px;
+  max-width: 100%;
   height: 60px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: #52dd28ff;
+  border: none;
   overflow: hidden;
   transition: all 0.3s;
 }
@@ -157,7 +158,8 @@
 .premium-cart-button .button__text {
   color: #fff;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 16px;
+  font-family: var(--font-cinzel);
   transition: all 0.3s;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -561,4 +563,77 @@
   padding-left: 0;
   padding-right: 0;
   width: 100%;
+}
+
+/* Custom Animated Checkbox for I Agree - Uiverse.io by elijahgummer */
+.agree-checkbox-wrapper {
+  display: block;
+  position: relative;
+  cursor: pointer;
+  font-size: 20px;
+  user-select: none;
+  border: 3px solid #beddd0;
+  border-radius: 10px;
+  overflow: hidden;
+  width: 1.3em;
+  height: 1.3em;
+  flex-shrink: 0;
+}
+
+/* Hide the default checkbox but keep it clickable over the whole area */
+.agree-checkbox-wrapper input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  margin: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark-custom {
+  position: relative;
+  top: 0;
+  left: 0;
+  height: 1.3em;
+  width: 1.3em;
+  background-color: #52dd28ff;
+  border-bottom: 2px solid #45b824;
+  box-shadow: inset 0 3px 3px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  transform: translateY(-130%);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* When the checkbox is checked, slide the checkmark in */
+.agree-checkbox-wrapper input:checked ~ .checkmark-custom {
+  transform: translateY(0);
+}
+
+/* Create the checkmark/indicator */
+.checkmark-custom:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.agree-checkbox-wrapper input:checked ~ .checkmark-custom:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.agree-checkbox-wrapper .checkmark-custom:before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  box-shadow: 0 4px 2px rgba(0, 0, 0, 0.34);
 }

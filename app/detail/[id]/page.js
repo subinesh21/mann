@@ -13,8 +13,8 @@ import FAQAccordion from '@/components/FAQAccordion';
 import { generateProductSchema, generateBreadcrumbSchema } from '@/lib/schema-markup';
 import { useCart } from '@/context/CartContext';
 import Link from 'next/link';
-import Image from 'next/image';
 import { toast } from 'react-toastify';
+import SafeImage from '@/components/SafeImage';
 import { CATEGORY_INFO } from '@/lib/product-data';
 
 export default function ProductDetailsPage() {
@@ -48,24 +48,10 @@ export default function ProductDetailsPage() {
     setCurrentReviewIndex((prev) => (prev - 1 + reviews.length) % reviews.length);
   };
 
-  const [brokenImages, setBrokenImages] = useState({});
 
   const { addToCart } = useCart();
 
-  const handleImageError = (index) => {
-    setBrokenImages(prev => ({ ...prev, [index]: true }));
-  };
 
-  const DetailImageSkeleton = ({ isThumbnail = false }) => (
-    <div className={`w-full h-full flex flex-col items-center justify-center bg-[#f0f2f5] animate-pulse overflow-hidden ${isThumbnail ? 'p-2' : 'p-6'}`}>
-      <ImageIcon className={`${isThumbnail ? 'w-6 h-6' : 'w-12 h-12 lg:w-20 lg:h-20'} text-gray-200 mb-2`} />
-      {!isThumbnail && product && (
-        <span className="text-xs text-gray-400 font-medium text-center uppercase tracking-widest opacity-60" style={{ fontFamily: 'var(--font-mono), monospace' }}>
-          {product.name}
-        </span>
-      )}
-    </div>
-  );
 
   useEffect(() => {
     setMounted(true);
@@ -351,19 +337,15 @@ export default function ProductDetailsPage() {
             {/* Image Gallery */}
             <div className="w-full lg:max-w-[450px]">
               <div className="relative w-full aspect-square overflow-hidden bg-[#f5f7fa] mb-2 sm:mb-3 lg:mb-4">
-                {brokenImages[selectedImage] || !(productImages[selectedImage] || product.primaryImage) ? (
-                  <DetailImageSkeleton />
-                ) : (
-                  <Image
-                    src={productImages[selectedImage] || product.primaryImage || product.image}
-                    alt={`${product.name} - ${selectedColor} - View ${selectedImage + 1}`}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 450px"
-                    priority
-                    className="object-cover"
-                    onError={() => handleImageError(selectedImage)}
-                  />
-                )}
+                <SafeImage
+                  src={productImages[selectedImage] || product.primaryImage || product.image}
+                  alt={`${product.name} - ${selectedColor} - View ${selectedImage + 1}`}
+                  fill={true}
+                  sizes="(max-width: 1024px) 100vw, 450px"
+                  priority={true}
+                  className="object-cover"
+                  fallbackText={product.name}
+                />
               </div>
 
               {/* Thumbnail Images - Exactly 3 boxes */}
@@ -377,18 +359,14 @@ export default function ProductDetailsPage() {
                         className={`relative aspect-square overflow-hidden border-2 transition-colors ${selectedImage === idx ? 'border-[#52dd28ff]' : 'border-transparent hover:border-[#ebebeb]'
                           }`}
                       >
-                        {brokenImages[idx] || !img ? (
-                          <DetailImageSkeleton isThumbnail={true} />
-                        ) : (
-                          <Image
-                            src={img}
-                            alt={`${product.name} - ${selectedColor} - Thumbnail ${idx}`}
-                            fill
-                            sizes="(max-width: 1024px) 33vw, 150px"
-                            className="object-cover"
-                            onError={() => handleImageError(idx)}
-                          />
-                        )}
+                        <SafeImage
+                          src={img}
+                          alt={`${product.name} - ${selectedColor} - Thumbnail ${idx}`}
+                          fill={true}
+                          sizes="(max-width: 1024px) 33vw, 150px"
+                          className="object-cover"
+                          fallbackText={idx + 1}
+                        />
                       </button>
                     );
                   })}

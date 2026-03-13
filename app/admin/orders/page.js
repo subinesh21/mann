@@ -21,6 +21,7 @@ import {
   IndianRupee
 } from 'lucide-react';
 import AdminLayout from '@/components/admin/AdminLayout';
+import SafeImage from '@/components/SafeImage';
 
 const statusConfig = {
   pending: { label: 'Pending', color: 'bg-yellow-100 text-yellow-800', icon: Clock },
@@ -134,7 +135,7 @@ export default function AdminOrdersPage() {
           className="flex items-center justify-between"
         >
           <div>
-            <h1 className="text-base sm:text-lg font-bold text-gray-900">Orders</h1>
+            <p className="text sm:text-lg text-[26px] font-cinzel text-gray-900">Orders</p>
             <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5">Manage customer orders</p>
           </div>
           <div className="flex items-center gap-1 text-[10px] sm:text-xs bg-white px-2 py-1 rounded-box border border-gray-200">
@@ -231,22 +232,22 @@ export default function AdminOrdersPage() {
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-0.5">
-                            <h3 className="text-xs font-semibold text-gray-900 truncate">
-                              #{order.orderNumber}
+                            <h3 className="text-lg font-bold text-gray-900 truncate">
+                              {order.user?.name}
                             </h3>
-                            <span className={`inline-flex items-center px-1.5 py-0.5 rounded-full text-[8px] font-medium ${status.color}`}>
-                              <StatusIcon className="w-2 h-2 mr-0.5" />
+                            <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[12px] font-medium ${status.color}`}>
+                              <StatusIcon className="w-3 h-3 mr-1" />
                               {status.label}
                             </span>
                           </div>
-                          <p className="text-[10px] text-gray-500 truncate">{order.user?.name}</p>
+                          <p className="text-xs text-gray-500 truncate">#{order.orderNumber}</p>
                         </div>
                         <div className="text-right">
-                          <p className="text-xs font-bold text-gray-900 flex items-center gap-0.5">
-                            <IndianRupee className="w-2 h-2" />
+                          <p className="text-base font-bold text-gray-900 flex items-center gap-0.5">
+                            <IndianRupee className="w-4 h-4" />
                             {order.totalAmount}
                           </p>
-                          <ChevronDown className="w-3 h-3 text-gray-400 ml-auto" />
+                          <ChevronDown className="w-4 h-4 text-gray-400 ml-auto" />
                         </div>
                       </div>
                     </div>
@@ -264,55 +265,57 @@ export default function AdminOrdersPage() {
                             {/* Customer & Shipping */}
                             <div className="grid grid-cols-1 gap-2">
                               <div className="bg-white p-2 rounded-box border border-gray-200">
-                                <h4 className="text-[10px] font-semibold text-gray-900 mb-2 flex items-center gap-1">
-                                  <User className="w-3 h-3 text-[#52dd28ff]" />
+                                <h4 className="text-base text-gray-900 mb-2 flex items-center gap-1">
+                                  <User className="w-4 h-4 text-[#52dd28ff]" />
                                   Customer
                                 </h4>
-                                <p className="text-[10px] font-medium text-gray-900">{order.user?.name}</p>
-                                <p className="text-[8px] text-gray-500 flex items-center gap-1 mt-1">
-                                  <Mail className="w-2 h-2" />
+                                <p className="text-base text-gray-900 ml-6">{order.user?.name}</p>
+                                <p className="text-base text-gray-500 flex items-center gap-1 mt-1 ml-6">
+                                  <Mail className="w-3 h-3" />
                                   {order.user?.email}
                                 </p>
-                                <p className="text-[8px] text-gray-500 flex items-center gap-1">
-                                  <Phone className="w-2 h-2" />
+                                <p className="text-base text-gray-500 flex items-center gap-1 ml-6">
+                                  <Phone className="w-3 h-3" />
                                   {order.shippingAddress?.phone}
                                 </p>
                               </div>
 
                               <div className="bg-white p-2 rounded-box border border-gray-200">
-                                <h4 className="text-[10px] font-semibold text-gray-900 mb-2 flex items-center gap-1">
-                                  <MapPin className="w-3 h-3 text-[#52dd28ff]" />
+                                <h4 className="text-base font-bold text-gray-900 mb-2 flex items-center gap-1">
+                                  <MapPin className="w-4 h-4 text-[#52dd28ff]" />
                                   Shipping
                                 </h4>
-                                <p className="text-[8px] text-gray-600">{order.shippingAddress?.fullName}</p>
-                                <p className="text-[8px] text-gray-500">{order.shippingAddress?.address}</p>
-                                <p className="text-[8px] text-gray-500">{order.shippingAddress?.city}, {order.shippingAddress?.state}</p>
-                                <p className="text-[8px] text-gray-500">{order.shippingAddress?.zipCode}</p>
+                                <p className="text-base text-gray-500 ml-6">{order.shippingAddress?.fullName}</p>
+                                <p className="text-base text-gray-500 ml-6">{order.shippingAddress?.address}</p>
+                                <p className="text-base text-gray-500 ml-6">{order.shippingAddress?.city}, {order.shippingAddress?.state}</p>
+                                <p className="text-base text-gray-500 ml-6">{order.shippingAddress?.zipCode}</p>
                               </div>
                             </div>
 
                             {/* Order Items */}
                             <div className="bg-white p-2 rounded-box border border-gray-200">
-                              <h4 className="text-[10px] font-semibold text-gray-900 mb-2">Items ({getTotalItems(order.items)})</h4>
-                              <div className="space-y-2">
-                                {order.items?.map((item, idx) => (
-                                  <div key={idx} className="flex items-center gap-2">
-                                    <img
-                                      src={item.image}
-                                      alt={item.name}
-                                      className="w-6 h-6 object-cover rounded-box"
-                                    />
-                                    <div className="flex-1 min-w-0">
-                                      <p className="text-[8px] font-medium text-gray-900 truncate">{item.name}</p>
-                                      <p className="text-[7px] text-gray-500">Qty: {item.quantity}</p>
-                                    </div>
-                                    <p className="text-[8px] font-medium text-gray-900">
-                                      ₹{item.price * item.quantity}
-                                    </p>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
+                               <h4 className="text-base font-semibold text-gray-900 mb-2">Items ({getTotalItems(order.items)})</h4>
+                               <div className="space-y-3">
+                                 {order.items?.map((item, idx) => (
+                                   <div key={idx} className="flex items-center gap-3">
+                                     <SafeImage
+                                       src={item.image}
+                                       alt={item.name}
+                                       className="w-10 h-10 object-cover rounded-box"
+                                       width={40}
+                                       height={40}
+                                     />
+                                     <div className="flex-1 min-w-0">
+                                       <p className="text-sm font-semibold text-gray-900 truncate">{item.name}</p>
+                                       <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
+                                     </div>
+                                     <p className="text-sm font-bold text-gray-900">
+                                       ₹{item.price * item.quantity}
+                                     </p>
+                                   </div>
+                                 ))}
+                               </div>
+                             </div>
 
                             {/* Status Update */}
                             <div className="flex flex-wrap gap-1">

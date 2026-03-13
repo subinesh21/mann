@@ -257,9 +257,9 @@ export default function AdminDashboard() {
             transition={{ duration: 0.3 }}
             className="bg-white border border-gray-200 p-4 flex flex-col items-center justify-center text-center rounded-box"
           >
-            <Users className="w-6 h-6 text-[#52dd28ff] mb-2" />
-            <p className="text-xl font-bold text-gray-900">{stats.totalUsers}</p>
-            <p className="text-xs text-gray-500">Users</p>
+            <Users className="w-7 h-7 text-[#52dd28ff] mb-2" />
+            <p className="text-2xl font-bold text-gray-900">{stats.totalUsers}</p>
+            <p className="text-sm font-cinzel text-gray-500">Users</p>
           </motion.div>
 
           <motion.div
@@ -268,9 +268,9 @@ export default function AdminDashboard() {
             transition={{ duration: 0.3, delay: 0.05 }}
             className="bg-white border border-gray-200 p-4 flex flex-col items-center justify-center text-center rounded-box"
           >
-            <Package className="w-6 h-6 text-[#52dd28ff] mb-2" />
-            <p className="text-xl font-bold text-gray-900">{stats.totalProducts}</p>
-            <p className="text-xs text-gray-500">Products</p>
+            <Package className="w-7 h-7 text-[#52dd28ff] mb-2" />
+            <p className="text-2xl font-bold text-gray-900">{stats.totalProducts}</p>
+            <p className="text-sm font-cinzel text-gray-500">Products</p>
           </motion.div>
 
           <motion.div
@@ -279,9 +279,9 @@ export default function AdminDashboard() {
             transition={{ duration: 0.3, delay: 0.1 }}
             className="bg-white border border-gray-200 p-4 flex flex-col items-center justify-center text-center rounded-box"
           >
-            <ShoppingCart className="w-6 h-6 text-[#52dd28ff] mb-2" />
-            <p className="text-xl font-bold text-gray-900">{stats.totalOrders}</p>
-            <p className="text-xs text-gray-500">Orders</p>
+            <ShoppingCart className="w-7 h-7 text-[#52dd28ff] mb-2" />
+            <p className="text-2xl font-bold text-gray-900">{stats.totalOrders}</p>
+            <p className="text-sm font-cinzel text-gray-500">Orders</p>
           </motion.div>
 
           <motion.div
@@ -290,9 +290,9 @@ export default function AdminDashboard() {
             transition={{ duration: 0.3, delay: 0.15 }}
             className="bg-white border border-gray-200 p-4 flex flex-col items-center justify-center text-center rounded-box"
           >
-            <DollarSign className="w-6 h-6 text-[#52dd28ff] mb-2" />
-            <p className="text-xl font-bold text-gray-900">₹{stats.totalRevenue}</p>
-            <p className="text-xs text-gray-500">Revenue</p>
+            <DollarSign className="w-7 h-7 text-[#52dd28ff] mb-2" />
+            <p className="text-2xl font-bold text-gray-900">₹{stats.totalRevenue}</p>
+            <p className="text-sm font-cinzel text-gray-500">Revenue</p>
           </motion.div>
         </div>
 
@@ -307,7 +307,7 @@ export default function AdminDashboard() {
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <ShoppingCart className="w-4 h-4 text-[#52dd28ff] mr-2" />
-                <h2 className="text-sm font-bold text-gray-900">Recent Orders</h2>
+                <h2 className="text-sm font-bold font-cinzel text-gray-900">Recent Orders</h2>
               </div>
               <button
                 onClick={() => handleViewAllClick('orders')}
@@ -366,7 +366,7 @@ export default function AdminDashboard() {
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <Users className="w-4 h-4 text-[#52dd28ff] mr-2" />
-                <h2 className="text-sm font-bold text-gray-900">New Users</h2>
+                <h2 className="text-sm font-bold font-cinzel text-gray-900">New Users</h2>
               </div>
               <button
                 onClick={() => handleViewAllClick('users')}

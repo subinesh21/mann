@@ -12,6 +12,7 @@ import Link from 'next/link';
 import Sidebar from '@/components/sections/Sidebar';
 import MobileNav from '@/components/MobileNav';
 import { toast } from 'react-toastify';
+import SafeImage from '@/components/SafeImage';
 import UserInfoCard from './UserInfoCard';
 import OrderTimeline from './OrderTimeline';
 
@@ -352,13 +353,13 @@ export default function AccountDashboard() {
                                                                             <div className="space-y-2">
                                                                                 {order.items?.map((item, itemIndex) => (
                                                                                     <div key={itemIndex} className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 bg-white rounded-box border border-gray-200">
-                                                                                        <img
-                                                                                            src={item.image || '/images/product-chai-cups.jpg'}
+                                                                                        <SafeImage
+                                                                                            src={item.image}
                                                                                             alt={item.name}
                                                                                             className="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded-box border border-gray-200"
-                                                                                            onError={(e) => {
-                                                                                                e.target.src = '/images/product-chai-cups.jpg';
-                                                                                            }}
+                                                                                            width={48}
+                                                                                            height={48}
+                                                                                            fallbackText={item.name}
                                                                                         />
                                                                                         <div className="flex-1 min-w-0">
                                                                                             <h5 className="text-xs font-medium text-gray-900 truncate">{item.name}</h5>
